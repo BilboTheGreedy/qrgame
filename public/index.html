@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Treasure Hunt</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-image: linear-gradient(to bottom right, #ffccd5, #ffc8dd, #cdb4db);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            color: #ff4d8d;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        .puzzle-container {
+            padding: 1.5rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+        .puzzle-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #ff4d8d;
+        }
+        .puzzle-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        .camera-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            border: 3px dashed #ff4d8d;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        #reader {
+            width: 100%;
+            height: 300px;
+            background-color: #f5f5f5;
+        }
+        .hint-text {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-left: 3px solid #ff4d8d;
+            display: none;
+        }
+        .progress-container {
+            margin-top: 2rem;
+            text-align: center;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #ff4d8d;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .hearts-container {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+        }
+        .hidden {
+            display: none;
+        }
+        .final-message {
+            text-align: center;
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin: 2rem 0;
+            animation: pulse 2s infinite;
+        }
+        .treasure-location {
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: #ff4d8d;
+            margin-top: 1rem;
+        }
+        .code-found-message {
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            animation: fadeIn 1s;
+        }
+        .qr-indicator {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 5px;
+            background-color: #e9ecef;
+            position: relative;
+        }
+        .qr-indicator.found {
+            background-color: #ff4d8d;
+        }
+        .qr-indicator:before {
+            content: '?';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-weight: bold;
+        }
+        .qr-indicator.found:before {
+            content: '✓';
+        }
+        .clue-content {
+            padding: 1rem;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+        button {
+            background-color: #ff4d8d;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 1rem auto;
+            display: block;
+        }
+        button:hover {
+            background-color: #ff2d7d;
+        }
+        .manual-entry-button {
+            background-color: #6c757d;
+            font-size: 0.9rem;
+            padding: 0.6rem 1rem;
+        }
+        #scanner-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
+        }
+        .camera-status {
+            text-align: center;
+            padding: 10px;
+            font-style: italic;
+            color: #6c757d;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff4d8d;
+            border-radius: 50%;
+            animation: fall 5s linear infinite;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>QR Code Treasure Hunt</h1>
+            <p class="subtitle">Find the hidden QR codes to uncover a special surprise!</p>
+        </div>
+        
+        <div id="game-intro" class="puzzle-container">
+            <div class="puzzle-title">Welcome to Your Treasure Hunt!</div>
+            <div class="puzzle-description">
+                <p>I've hidden 5 special QR codes for you to find. Each one contains a clue or piece of our story together.</p>
+                <p>Scan them all to discover where your special treasure is hidden!</p>
+                <p>Your first clue: <span id="first-clue">"Look where we keep our memories from the past year..."</span></p>
+            </div>
+            <button onclick="startGame()">Start Hunt</button>
+        </div>
+        
+        <div id="qr-scanner" class="puzzle-container hidden">
+            <div class="puzzle-title">QR Code Scanner</div>
+            <div class="puzzle-description">
+                <p>When you find a QR code, scan it with the camera below:</p>
+            </div>
+            
+            <div class="camera-container">
+                <div id="reader"></div>
+                <div class="camera-status" id="camera-status">Starting camera...</div>
+            </div>
+            
+            <div id="scanner-error"></div>
+            
+            <button id="manual-entry-btn" class="manual-entry-button" onclick="showManualEntry()">Enter Code Manually</button>
+            
+            <div class="progress-container">
+                <p>QR Codes Found:</p>
+                <div class="qr-indicators">
+                    <div class="qr-indicator" id="qr-1"></div>
+                    <div class="qr-indicator" id="qr-2"></div>
+                    <div class="qr-indicator" id="qr-3"></div>
+                    <div class="qr-indicator" id="qr-4"></div>
+                    <div class="qr-indicator" id="qr-5"></div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+            
+            <div id="progress-controls" style="text-align: center; margin-top: 20px;">
+                <button onclick="resetProgress()" style="background-color: #6c757d;">Reset Progress</button>
+            </div>
+        </div>
+        
+        <div id="clue-display" class="puzzle-container hidden">
+            <div class="puzzle-title">You Found a Clue!</div>
+            <div id="found-which-qr" class="code-found-message">You found QR Code #1!</div>
+            <div class="clue-content" id="clue-content">
+                <!-- Clue content will be displayed here -->
+            </div>
+            <div id="next-hint" class="hint-text">
+                <!-- Next location hint will be shown here -->
+            </div>
+            <button onclick="returnToScanner()">Continue Hunting</button>
+        </div>
+        
+        <div id="final-message" class="puzzle-container hidden">
+            <div class="final-message">
+                <p>Congratulations! You've found all the QR codes!</p>
+                <p>Your treasure awaits you at:</p>
+                <div class="treasure-location" id="treasure-location"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script>
+        // QR Code data and clues
+        const qrCodes = {
+            "QR_CODE_1": {
+                id: 1,
+                found: false,
+                clue: "Our first date was so special to me. I remember how nervous I was when we met at that café. You ordered your favorite drink and we talked for hours.",
+                nextHint: "For your next clue, look where we keep something sweet..."
+            },
+            "QR_CODE_2": {
+                id: 2,
+                found: false,
+                clue: "Remember our first trip together? We took so many pictures and laughed so much. That sunset by the beach was magical.",
+                nextHint: "Your next clue is hiding where we keep our favorite books..."
+            },
+            "QR_CODE_3": {
+                id: 3,
+                found: false,
+                clue: "That time we cooked together and almost burned the kitchen! But the meal turned out perfect in the end, just like us.",
+                nextHint: "Look for the next clue where music plays..."
+            },
+            "QR_CODE_4": {
+                id: 4,
+                found: false,
+                clue: "Our song always makes me think of you. Whenever I hear it, I smile and remember all our special moments together.",
+                nextHint: "For your final clue, check where I left you a note last Valentine's Day..."
+            },
+            "QR_CODE_5": {
+                id: 5,
+                found: false,
+                clue: "You mean everything to me. Every day with you is a blessing, and I can't wait to create more memories together.",
+                nextHint: "You've found all the clues! Now for your treasure..."
+            }
+        };
+
+        // Customize this with the actual location of the gift
+        const treasureLocation = "Look inside the bottom drawer of your dresser!";
+        
+        let html5QrCode;
+        let foundCodes = 0;
+        
+        // Load saved progress on page load
+        window.onload = function() {
+            loadSavedProgress();
+        };
+        
+        // Save progress to localStorage
+        function saveProgress() {
+            const progress = {
+                foundCodes: foundCodes,
+                qrCodes: qrCodes
+            };
+            localStorage.setItem('treasureHuntProgress', JSON.stringify(progress));
+            console.log('Progress saved');
+        }
+        
+        // Load progress from localStorage
+        function loadSavedProgress() {
+            const savedProgress = localStorage.getItem('treasureHuntProgress');
+            if (savedProgress) {
+                const progress = JSON.parse(savedProgress);
+                
+                // Restore QR codes state
+                for (const key in progress.qrCodes) {
+                    if (qrCodes[key]) {
+                        qrCodes[key].found = progress.qrCodes[key].found;
+                    }
+                }
+                
+                // Count found codes
+                foundCodes = 0;
+                for (const key in qrCodes) {
+                    if (qrCodes[key].found) {
+                        foundCodes++;
+                        document.getElementById(`qr-${qrCodes[key].id}`).classList.add('found');
+                    }
+                }
+                
+                // Update progress bar
+                document.getElementById('progress-fill').style.width = (foundCodes / 5 * 100) + '%';
+                
+                console.log(`Loaded saved progress. Found ${foundCodes} QR codes.`);
+                
+                // If all codes are found, show the final message
+                if (foundCodes === 5) {
+                    document.getElementById('game-intro').classList.add('hidden');
+                    document.getElementById('qr-scanner').classList.add('hidden');
+                    document.getElementById('clue-display').classList.add('hidden');
+                    document.getElementById('final-message').classList.remove('hidden');
+                    document.getElementById('treasure-location').textContent = treasureLocation;
+                    createConfetti();
+                }
+                // If at least one code found but not all, show the scanner
+                else if (foundCodes > 0) {
+                    document.getElementById('game-intro').classList.add('hidden');
+                    document.getElementById('qr-scanner').classList.remove('hidden');
+                    startScanner();
+                }
+            }
+        }
+        
+        function startGame() {
+            document.getElementById('game-intro').classList.add('hidden');
+            document.getElementById('qr-scanner').classList.remove('hidden');
+            startScanner();
+        }
+        
+        function startScanner() {
+            document.getElementById('camera-status').textContent = "Starting camera...";
+            document.getElementById('scanner-error').style.display = "none";
+            
+            // If a scanner is already running, stop it first
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().then(() => {
+                    initializeScanner();
+                }).catch(err => {
+                    console.error("Error stopping scanner:", err);
+                    initializeScanner();
+                });
+            } else {
+                initializeScanner();
+            }
+        }
+        
+        function initializeScanner() {
+            html5QrCode = new Html5Qrcode("reader");
+            
+            const qrCodeSuccessCallback = (decodedText) => {
+                // Stop the scanner once a QR code is found
+                html5QrCode.stop().then(() => {
+                    console.log("Scanner stopped after successful scan");
+                    processQrCode(decodedText);
+                }).catch(err => {
+                    console.error("Error stopping scanner:", err);
+                });
+            };
+            
+            const config = { 
+                fps: 10, 
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0
+            };
+            
+            document.getElementById('camera-status').textContent = "Accessing camera...";
+            
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                config,
+                qrCodeSuccessCallback,
+                (errorMessage) => {
+                    // Just log errors, don't display during scanning
+                    console.error(errorMessage);
+                }
+            ).then(() => {
+                document.getElementById('camera-status').textContent = "Camera active! Point at a QR code.";
+            }).catch((err) => {
+                console.error("Error starting scanner:", err);
+                document.getElementById('scanner-error').style.display = "block";
+                document.getElementById('scanner-error').innerHTML = 
+                    "Camera access error: " + err + "<br>Try using a different browser or check camera permissions.";
+                document.getElementById('camera-status').textContent = "Camera not available.";
+            });
+        }
+        
+        function processQrCode(qrValue) {
+            // Check if this is one of our QR codes
+            if (qrCodes[qrValue]) {
+                const qrCode = qrCodes[qrValue];
+                
+                // Check if this code has already been found
+                if (qrCode.found) {
+                    alert("You've already found this QR code!");
+                    startScanner(); // Restart the scanner
+                    return;
+                }
+                
+                // Mark as found
+                qrCode.found = true;
+                foundCodes++;
+                
+                // Save progress
+                saveProgress();
+                
+                // Update UI
+                document.getElementById(`qr-${qrCode.id}`).classList.add('found');
+                document.getElementById('progress-fill').style.width = (foundCodes / 5 * 100) + '%';
+                
+                // Show the clue
+                document.getElementById('found-which-qr').textContent = `You found QR Code #${qrCode.id}!`;
+                document.getElementById('clue-content').textContent = qrCode.clue;
+                document.getElementById('next-hint').textContent = qrCode.nextHint;
+                document.getElementById('next-hint').style.display = 'block';
+                
+                document.getElementById('qr-scanner').classList.add('hidden');
+                document.getElementById('clue-display').classList.remove('hidden');
+                
+                // If all codes are found, show the final message
+                if (foundCodes === 5) {
+                    setTimeout(() => {
+                        document.getElementById('clue-display').classList.add('hidden');
+                        document.getElementById('final-message').classList.remove('hidden');
+                        document.getElementById('treasure-location').textContent = treasureLocation;
+                        createConfetti();
+                    }, 5000);
+                }
+            } else {
+                alert("This doesn't seem to be one of the treasure hunt QR codes. Keep looking!");
+                startScanner(); // Restart the scanner
+            }
+        }
+        
+        function showManualEntry() {
+            // Create a modal for manual entry
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '1000';
+            
+            // Create the modal content
+            const content = document.createElement('div');
+            content.style.backgroundColor = 'white';
+            content.style.padding = '20px';
+            content.style.borderRadius = '10px';
+            content.style.width = '80%';
+            content.style.maxWidth = '400px';
+            
+            // Header
+            const header = document.createElement('h3');
+            header.textContent = 'Enter QR Code Manually';
+            header.style.color = '#ff4d8d';
+            header.style.marginTop = '0';
+            
+            // Description
+            const description = document.createElement('p');
+            description.textContent = 'If camera scanning isn\'t working, enter the QR code value manually:';
+            
+            // Input field
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.placeholder = 'Enter QR Code (e.g., QR_CODE_1)';
+            input.style.width = '100%';
+            input.style.padding = '10px';
+            input.style.marginBottom = '15px';
+            input.style.borderRadius = '5px';
+            input.style.border = '1px solid #ccc';
+            
+            // Buttons
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.display = 'flex';
+            buttonContainer.style.justifyContent = 'space-between';
+            
+            const cancelButton = document.createElement('button');
+            cancelButton.textContent = 'Cancel';
+            cancelButton.style.padding = '10px 15px';
+            cancelButton.style.border = 'none';
+            cancelButton.style.borderRadius = '5px';
+            cancelButton.style.backgroundColor = '#ccc';
+            cancelButton.style.cursor = 'pointer';
+            
+            const submitButton = document.createElement('button');
+            submitButton.textContent = 'Submit';
+            submitButton.style.padding = '10px 15px';
+            submitButton.style.border = 'none';
+            submitButton.style.borderRadius = '5px';
+            submitButton.style.backgroundColor = '#ff4d8d';
+            submitButton.style.color = 'white';
+            submitButton.style.cursor = 'pointer';
+            
+            // Add event listeners
+            cancelButton.addEventListener('click', () => {
+                document.body.removeChild(modal);
+                startScanner(); // Restart scanner when canceling
+            });
+            
+            submitButton.addEventListener('click', () => {
+                const qrValue = input.value.trim();
+                if (qrValue) {
+                    document.body.removeChild(modal);
+                    processQrCode(qrValue);
+                } else {
+                    alert('Please enter a valid QR code.');
+                }
+            });
+            
+            // Assemble the modal
+            buttonContainer.appendChild(cancelButton);
+            buttonContainer.appendChild(submitButton);
+            
+            content.appendChild(header);
+            content.appendChild(description);
+            content.appendChild(input);
+            content.appendChild(buttonContainer);
+            
+            modal.appendChild(content);
+            
+            // Stop scanner while modal is open
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().catch(err => {
+                    console.error("Error stopping scanner:", err);
+                });
+            }
+            
+            // Add to body
+            document.body.appendChild(modal);
+            
+            // Focus the input
+            setTimeout(() => {
+                input.focus();
+            }, 100);
+        }
+        
+        function returnToScanner() {
+            document.getElementById('clue-display').classList.add('hidden');
+            document.getElementById('qr-scanner').classList.remove('hidden');
+            startScanner();
+        }
+        
+        function resetProgress() {
+            if (confirm("Are you sure you want to reset all progress? This cannot be undone.")) {
+                // Reset QR codes
+                for (const key in qrCodes) {
+                    qrCodes[key].found = false;
+                }
+                
+                // Reset UI
+                foundCodes = 0;
+                document.getElementById('progress-fill').style.width = '0%';
+                
+                // Reset QR indicators
+                for (let i = 1; i <= 5; i++) {
+                    document.getElementById(`qr-${i}`).classList.remove('found');
+                }
+                
+                // Clear local storage
+                localStorage.removeItem('treasureHuntProgress');
+                
+                // Reset view
+                document.getElementById('final-message').classList.add('hidden');
+                document.getElementById('clue-display').classList.add('hidden');
+                document.getElementById('qr-scanner').classList.add('hidden');
+                document.getElementById('game-intro').classList.remove('hidden');
+                
+                // Stop scanner if running
+                if (html5QrCode && html5QrCode.isScanning) {
+                    html5QrCode.stop().catch(err => {
+                        console.error("Error stopping scanner:", err);
+                    });
+                }
+                
+                alert("Progress has been reset. You can start the hunt again.");
+            }
+        }
+        
+        function createConfetti() {
+            const container = document.querySelector('.container');
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random position
+                confetti.style.left = Math.random() * 100 + '%';
+                
+                // Random color
+                const colors = ['#ff4d8d', '#ffc8dd', '#cdb4db', '#ffafcc', '#bde0fe'];
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random size
+                const size = Math.random() * 10 + 5;
+                confetti.style.width = size + 'px';
+                confetti.style.height = size + 'px';
+                
+                // Random animation duration
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                
+                // Random animation delay
+                confetti.style.animationDelay = Math.random() * 5 + 's';
+                
+                container.appendChild(confetti);
+            }
+        }
+    </script>
+</body>
+</html>
