@@ -25,14 +25,14 @@ class TreasureHuntConfig {
             "QR_CODE_3": {
                 id: 3,
                 found: false,
-                clue: "It certainly feels different this morning? what did i put in it?",
-                nextHint: "I carry everything you need for the day.... where are all the chargers???'"
+                clue: "Its big and blue.",
+                nextHint: "I require electricity.... my umbilical cord is yellow and i keep it in my trunk put it plugs in where?'"
             },
             "QR_CODE_4": {
                 id: 4,
                 found: false,
-                clue: "Its big and blue. I love it.",
-                nextHint: "I require electricity.... my umbilical cord is yellow and i keep it in my trunk put it plugs in where?"
+                clue: "Its nice riding shotgun in the car!",
+                nextHint: "it can block the sun but it can also be a mirror (something attached to the roof)"
             },
             "QR_CODE_5": {
                 id: 5,
