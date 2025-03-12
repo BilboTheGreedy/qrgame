@@ -1,21 +1,37 @@
 let html5QrCode;
 let foundCodes = 0;
 
-// Check for camera support and HTTPS secure context
+// Enhanced camera support check
 function checkCameraSupport() {
-  if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
-    alert('Camera access is not supported on this device.');
-    console.error('navigator.mediaDevices.getUserMedia not available');
-    return false;
+    return new Promise((resolve, reject) => {
+      // Check for modern browser support of mediaDevices
+      if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
+        reject(new Error('Camera access is not supported on this device.'));
+        return;
+      }
+  
+      // Check for secure context (HTTPS or localhost)
+      if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+        reject(new Error('Camera access requires a secure context (HTTPS).'));
+        return;
+      }
+  
+      // Check if Html5Qrcode is available
+      if (typeof Html5Qrcode === 'undefined') {
+        reject(new Error('QR Scanner library not loaded.'));
+        return;
+      }
+  
+      // Attempt to get camera constraints
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+        .then(() => resolve(true))
+        .catch(err => {
+          console.error('Camera access error:', err);
+          reject(new Error('Could not access camera. Please check permissions.'));
+        });
+    });
   }
-  if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-    alert('Camera access requires a secure context (HTTPS).');
-    console.error('Page not served over HTTPS');
-    return false;
-  }
-  console.log('Camera support verified:', navigator.mediaDevices);
-  return true;
-}
+  
 
 // Show a specific screen and hide others
 function showScreen(screenId) {
@@ -52,31 +68,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Initialize and start the QR scanner
 function startScanner() {
-  if (!checkCameraSupport()) return;
-
-  document.getElementById('camera-status').textContent = "Starting camera...";
-  document.getElementById('scanner-error').style.display = "none";
-
-  // If a scanner is already running, stop it first
-  if (html5QrCode && html5QrCode.isScanning) {
-    html5QrCode.stop().then(() => {
-      initializeScanner();
-    }).catch(err => {
-      console.error("Error stopping scanner:", err);
-      initializeScanner();
-    });
-  } else {
-    initializeScanner();
+    // Clear any existing error messages
+    const cameraStatus = document.getElementById('camera-status');
+    const scannerError = document.getElementById('scanner-error');
+    if (cameraStatus) cameraStatus.textContent = "Starting camera...";
+    if (scannerError) scannerError.style.display = "none";
+  
+    // Perform comprehensive camera support check
+    checkCameraSupport()
+      .then(() => initializeScanner())
+      .catch(error => {
+        console.error('Camera initialization failed:', error);
+        
+        // Update UI with error
+        if (cameraStatus) cameraStatus.textContent = "Camera access failed.";
+        if (scannerError) {
+          scannerError.style.display = "block";
+          scannerError.innerHTML = `
+            <strong>Camera Error:</strong> ${error.message}<br>
+            Possible solutions:
+            <ul>
+              <li>Ensure you're on HTTPS or localhost</li>
+              <li>Check camera permissions</li>
+              <li>Use a modern browser</li>
+              <li>Restart the application</li>
+            </ul>
+          `;
+        }
+      });
   }
-}
+
 
 function initializeScanner() {
-  if (typeof Html5Qrcode === 'undefined') {
-    console.error("Html5Qrcode library is not loaded.");
-    alert("QR Scanner library not available.");
-    return;
+  // Ensure we don't have an existing scanner
+  if (html5QrCode && html5QrCode.isScanning) {
+    html5QrCode.stop().catch(console.error);
   }
-  html5QrCode = new Html5Qrcode("reader");
+
+  // Recreate the Html5Qrcode instance
+  html5QrCode = new Html5Qrcode("reader", { 
+    formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE] 
+  });
 
   const qrCodeSuccessCallback = (decodedText) => {
     html5QrCode.stop().then(() => {
@@ -93,38 +125,65 @@ function initializeScanner() {
     aspectRatio: 1.0
   };
 
-  document.getElementById('camera-status').textContent = "Accessing camera...";
+  const cameraStatus = document.getElementById('camera-status');
+  const scannerError = document.getElementById('scanner-error');
 
-  // Start the scanner and set a timeout to detect if the camera never starts
-  const startPromise = html5QrCode.start(
+  // Timeout to handle cases where camera doesn't start
+  const startTimeout = setTimeout(() => {
+    if (!html5QrCode.isScanning) {
+      if (cameraStatus) cameraStatus.textContent = "Camera start timeout. Check permissions.";
+      if (scannerError) {
+        scannerError.style.display = "block";
+        scannerError.innerHTML = `
+          <strong>Timeout Error:</strong> Could not start camera.<br>
+          Possible issues:
+          <ul>
+            <li>Camera in use by another app</li>
+            <li>Browser camera access blocked</li>
+            <li>Hardware or driver problems</li>
+          </ul>
+        `;
+      }
+    }
+  }, 10000);  // 10-second timeout
+
+  // Start the scanner
+  html5QrCode.start(
     { facingMode: "environment" },
     config,
     qrCodeSuccessCallback,
     (errorMessage) => {
+      clearTimeout(startTimeout);
       console.error("QR scan error:", errorMessage);
+      if (cameraStatus) cameraStatus.textContent = "Camera scan error.";
+      if (scannerError) {
+        scannerError.style.display = "block";
+        scannerError.innerHTML = `
+          <strong>Scanning Error:</strong> ${errorMessage}<br>
+          Try repositioning or refreshing.
+        `;
+      }
     }
-  );
-
-  const startTimeout = setTimeout(() => {
-    if (!html5QrCode.isScanning) {
-      document.getElementById('camera-status').textContent = "Camera access timeout. Please check your permissions.";
-      document.getElementById('scanner-error').style.display = "block";
-      document.getElementById('scanner-error').innerHTML = "Camera access timeout. Please ensure camera permissions are granted and try again.";
-      console.error("Camera start timeout reached");
-    }
-  }, 10000);
-
-  startPromise.then(() => {
+  ).then(() => {
     clearTimeout(startTimeout);
-    document.getElementById('camera-status').textContent = "Camera active! Point at a QR code.";
+    if (cameraStatus) cameraStatus.textContent = "Camera active! Point at a QR code.";
     console.log("Camera started successfully");
   }).catch((err) => {
     clearTimeout(startTimeout);
     console.error("Error starting scanner:", err);
-    document.getElementById('scanner-error').style.display = "block";
-    document.getElementById('scanner-error').innerHTML = 
-      "Camera access error: " + err + "<br>Try using a different browser or check camera permissions.";
-    document.getElementById('camera-status').textContent = "Camera not available.";
+    if (scannerError) {
+      scannerError.style.display = "block";
+      scannerError.innerHTML = `
+        <strong>Camera Start Error:</strong> ${err}<br>
+        Possible solutions:
+        <ul>
+          <li>Check camera permissions</li>
+          <li>Ensure secure context</li>
+          <li>Restart browser</li>
+        </ul>
+      `;
+    }
+    if (cameraStatus) cameraStatus.textContent = "Camera not available.";
   });
 }
 
