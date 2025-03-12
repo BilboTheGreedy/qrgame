@@ -8,6 +8,23 @@
 let html5QrCode;
 let foundCodes = 0;
 
+// Check if HTML5 QR Code library is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        if (typeof Html5Qrcode === 'undefined') {
+            const scannerError = document.getElementById('scanner-error');
+            if (scannerError) {
+                scannerError.style.display = "block";
+                scannerError.innerHTML = `
+                    <strong>Library Load Error:</strong> QR scanner library not loaded.<br>
+                    Please check your internet connection and refresh the page.
+                `;
+            }
+            console.error("Html5Qrcode library not loaded!");
+        }
+    }, 1000); // Give it a second to load
+});
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     // Bind event listeners
