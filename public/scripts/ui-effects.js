@@ -1,114 +1,67 @@
-let html5QrCode;
+/**
+ * UI Effects and Animations
+ * 
+ * Handles visual effects and animations for the app
+ */
 
-function startScanner() {
-    const cameraStatus = document.getElementById('camera-status');
-    const scannerError = document.getElementById('scanner-error');
+// Create particle background effect
+function createParticles() {
+    const container = document.querySelector('.app-container');
+    const particleCount = 20;
     
-    if (cameraStatus) cameraStatus.textContent = "Starting camera...";
-    if (scannerError) scannerError.style.display = "none";
-    
-    // Log our starting point
-    console.log("Starting scanner initialization");
-    
-    // Create a new instance
-    if (html5QrCode && html5QrCode.isScanning) {
-        console.log("Scanner already running, stopping it first");
-        html5QrCode.stop().then(() => {
-            console.log("Successfully stopped previous scan");
-            initScanner();
-        }).catch(err => {
-            console.error("Error stopping previous scan:", err);
-            initScanner();
-        });
-    } else {
-        initScanner();
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        // Random size between 5px and 15px
+        const size = Math.random() * 10 + 5;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Random position
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        
+        // Random opacity
+        particle.style.opacity = Math.random() * 0.5;
+        
+        // Add animation with random duration and delay
+        particle.style.animation = `float ${Math.random() * 5 + 5}s infinite alternate`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        
+        container.appendChild(particle);
     }
 }
 
-function initScanner() {
-    console.log("Creating new scanner instance");
+// Create confetti effect for the treasure screen
+function createConfetti() {
+    const container = document.querySelector('.treasure-complete');
+    const colors = ['#2196F3', '#03A9F4', '#00BCD4', '#E91E63', '#FFC107'];
+    const confettiCount = 100;
     
-    try {
-        html5QrCode = new Html5Qrcode("reader");
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
         
-        console.log("Scanner instance created, attempting to start camera");
+        // Random shape
+        if (Math.random() > 0.5) {
+            confetti.style.borderRadius = '50%';
+        } else {
+            confetti.style.width = `${Math.random() * 10 + 5}px`;
+            confetti.style.height = `${Math.random() * 4 + 2}px`;
+            confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        }
         
-        html5QrCode.start(
-            { facingMode: "environment" },
-            {
-                fps: 10,
-                qrbox: { width: 250, height: 250 }
-            },
-            (decodedText) => {
-                console.log("QR code detected:", decodedText);
-                html5QrCode.stop().then(() => {
-                    processQrCode(decodedText);
-                });
-            },
-            (errorMessage) => {
-                // Just log scan errors, don't display
-                console.log("QR scan error:", errorMessage);
-            }
-        ).then(() => {
-            console.log("Camera started successfully");
-            document.getElementById('camera-status').textContent = "Camera active! Point at a QR code.";
-        }).catch(err => {
-            console.error("Camera start error:", err);
-            document.getElementById('camera-status').textContent = "Camera failed to start.";
-            document.getElementById('scanner-error').style.display = "block";
-            document.getElementById('scanner-error').innerHTML = `
-                <strong>Camera Error:</strong> ${err}<br>
-                Check your camera permissions and make sure no other app is using the camera.
-            `;
-        });
-    } catch (err) {
-        console.error("Error creating scanner instance:", err);
-        document.getElementById('camera-status').textContent = "Failed to initialize scanner.";
-        document.getElementById('scanner-error').style.display = "block";
-        document.getElementById('scanner-error').innerHTML = `
-            <strong>Scanner Error:</strong> ${err}<br>
-            There was a problem initializing the QR scanner.
-        `;
-    }
-}
-
-// Add the missing processQrCode function
-function processQrCode(qrValue) {
-    console.log("QR Code scanned:", qrValue);
-    if (window.qrCodes && window.qrCodes[qrValue]) {
-        const qrCode = window.qrCodes[qrValue];
-
-        if (qrCode.found) {
-            alert("You've already found this QR code!");
-            startScanner();
-            return;
-        }
-
-        qrCode.found = true;
-        foundCodes++;
-
-        saveProgress();
-        const pointElem = document.getElementById(`point-${qrCode.id}`);
-        if (pointElem) {
-            pointElem.classList.add('active');
-        }
-        updateProgressBar();
-
-        document.getElementById('found-which-qr').textContent = `You found QR Code #${qrCode.id}!`;
-        document.getElementById('clue-content').textContent = qrCode.clue;
-        document.getElementById('next-hint').textContent = qrCode.nextHint;
-
-        showScreen('clue-screen');
-
-        if (foundCodes === 5) {
-            setTimeout(() => {
-                document.getElementById('treasure-location').textContent = window.treasureLocation;
-                showScreen('treasure-screen');
-                createConfetti();
-            }, 5000);
-        }
-    } else {
-        alert("This doesn't seem to be one of the treasure hunt QR codes. Keep looking!");
-        startScanner();
+        // Random color
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        // Random position
+        confetti.style.left = `${Math.random() * 100}%`;
+        
+        // Random animation duration and delay
+        confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+        confetti.style.animationDelay = `${Math.random() * 5}s`;
+        
+        container.appendChild(confetti);
     }
 }

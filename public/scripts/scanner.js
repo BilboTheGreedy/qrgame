@@ -121,6 +121,9 @@ function initializeScanner() {
         formatsToSupport: [Html5QrcodeSupportedFormats.QR_CODE],
         verbose: false // Disable verbose logs for better performance on mobile
     });
+    
+    // Update the global reference
+    window.html5QrCode = html5QrCode;
 
     const qrCodeSuccessCallback = (decodedText) => {
         // Add vibration feedback on success (if supported)
@@ -221,7 +224,8 @@ function processQrCode(qrValue) {
         }
 
         qrCode.found = true;
-        foundCodes++;
+        window.foundCodes++;
+        foundCodes = window.foundCodes; // Keep local var in sync
 
         saveProgress();
         const pointElem = document.getElementById(`point-${qrCode.id}`);
@@ -350,3 +354,8 @@ function showManualEntry() {
         input.focus();
     }, 300);
 }
+
+// Expose functions to global scope
+window.startScanner = startScanner;
+window.showManualEntry = showManualEntry;
+window.processQrCode = processQrCode;
