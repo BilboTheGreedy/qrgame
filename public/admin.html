@@ -139,7 +139,7 @@
         <div class="qr-grid">
             <div class="qr-item">
                 <div class="qr-number">QR Code #1</div>
-                <img src="/qrcodes/QR_CODE_1.png" alt="QR Code 1">
+                <img src="/qrcodes/QR_CODE_1.png" class="qr-image" data-qr-id="1" alt="QR Code 1">
                 <div class="qr-hint">
                     <strong>Where to hide:</strong> <span id="hint-1">"Look where we keep our memories from the past year..."</span>
                 </div>
@@ -150,7 +150,7 @@
             
             <div class="qr-item">
                 <div class="qr-number">QR Code #2</div>
-                <img src="/qrcodes/QR_CODE_2.png" alt="QR Code 2">
+                <img src="/qrcodes/QR_CODE_2.png" class="qr-image" data-qr-id="2" alt="QR Code 2">
                 <div class="qr-hint">
                     <strong>Where to hide:</strong> <span id="hint-2">"Look where we keep something sweet..."</span>
                 </div>
@@ -161,7 +161,7 @@
             
             <div class="qr-item">
                 <div class="qr-number">QR Code #3</div>
-                <img src="/qrcodes/QR_CODE_3.png" alt="QR Code 3">
+                <img src="/qrcodes/QR_CODE_3.png" class="qr-image" data-qr-id="3" alt="QR Code 3">
                 <div class="qr-hint">
                     <strong>Where to hide:</strong> <span id="hint-3">"Look where we keep our favorite books..."</span>
                 </div>
@@ -172,7 +172,7 @@
             
             <div class="qr-item">
                 <div class="qr-number">QR Code #4</div>
-                <img src="/qrcodes/QR_CODE_4.png" alt="QR Code 4">
+                <img src="/qrcodes/QR_CODE_4.png" class="qr-image" data-qr-id="4" alt="QR Code 4">
                 <div class="qr-hint">
                     <strong>Where to hide:</strong> <span id="hint-4">"Look where music plays..."</span>
                 </div>
@@ -183,7 +183,7 @@
             
             <div class="qr-item">
                 <div class="qr-number">QR Code #5</div>
-                <img src="/qrcodes/QR_CODE_5.png" alt="QR Code 5">
+                <img src="/qrcodes/QR_CODE_5.png" class="qr-image" data-qr-id="5" alt="QR Code 5">
                 <div class="qr-hint">
                     <strong>Where to hide:</strong> <span id="hint-5">"Check where I left you a note last Valentine's Day..."</span>
                 </div>
@@ -198,7 +198,21 @@
             <p>Make sure to hide the gift at: <strong id="treasure-location">"Look inside the bottom drawer of your dresser!"</strong></p>
             <p>You can customize this location in the config.js file.</p>
             
-            <button class="print-all" onclick="refreshFromConfig()">Refresh from Config</button>
+            <div class="action-row" style="display: flex; justify-content: space-between; margin: 20px 0;">
+                <button class="print-all" style="width: 48%;" onclick="refreshFromConfig()">Refresh from Config</button>
+                <button class="print-all" style="width: 48%; background-color: #4CAF50;" onclick="regenerateQRCodes()">Regenerate QR Codes</button>
+            </div>
+
+            <div id="regeneration-status" style="display: none; padding: 15px; margin: 15px 0; border-radius: 5px; text-align: center;">
+                <div class="spinner" style="display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(0,0,0,0.1); border-radius: 50%; border-top-color: #ff4d8d; animation: spin 1s ease-in-out infinite;"></div>
+                <span id="regen-message">Regenerating QR codes...</span>
+            </div>
+            
+            <style>
+                @keyframes spin {
+                    to { transform: rotate(360deg); }
+                }
+            </style>
 
             <div class="troubleshooting">
                 <h3>Troubleshooting</h3>
@@ -239,7 +253,17 @@
             }
         }
         
-        document.addEventListener('DOMContentLoaded', updateHintsFromConfig);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update hints from config
+            updateHintsFromConfig();
+            
+            // Add cache-busting to all QR code images
+            const timestamp = new Date().getTime();
+            document.querySelectorAll('.qr-image').forEach(img => {
+                const currentSrc = img.getAttribute('src');
+                img.setAttribute('src', `${currentSrc}?t=${timestamp}`);
+            });
+        });
         
         function refreshFromConfig() {
             const existingScript = document.querySelector('script[src*="config.js"]');
@@ -255,6 +279,57 @@
             };
             
             document.body.appendChild(newScript);
+        }
+        
+        // Function to regenerate all QR codes
+        function regenerateQRCodes() {
+            if (!confirm('Are you sure you want to regenerate all QR codes? You\'ll need to print the new codes and replace any existing ones.')) {
+                return;
+            }
+            
+            const statusElement = document.getElementById('regeneration-status');
+            const messageElement = document.getElementById('regen-message');
+            statusElement.style.backgroundColor = '#f0f8ff';
+            statusElement.style.display = 'block';
+            messageElement.textContent = 'Regenerating QR codes...';
+            
+            fetch('/api/generate-qrcodes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    statusElement.style.backgroundColor = '#e8f5e9';
+                    messageElement.textContent = `Successfully regenerated ${data.count} QR codes!`;
+                    
+                    // Refresh all QR code images with a cache-busting parameter
+                    const timestamp = new Date().getTime();
+                    document.querySelectorAll('.qr-item img').forEach((img, index) => {
+                        const qrNumber = index + 1;
+                        img.src = `/qrcodes/QR_CODE_${qrNumber}.png?t=${timestamp}`;
+                    });
+                    
+                    setTimeout(() => {
+                        alert('QR codes have been regenerated successfully! Make sure to print the new codes.');
+                    }, 500);
+                } else {
+                    statusElement.style.backgroundColor = '#ffebee';
+                    messageElement.textContent = `Failed to regenerate QR codes: ${data.error}`;
+                }
+            })
+            .catch(error => {
+                statusElement.style.backgroundColor = '#ffebee';
+                messageElement.textContent = `Error: ${error.message}`;
+            })
+            .finally(() => {
+                // Keep the status visible so user can see the result
+                setTimeout(() => {
+                    statusElement.style.display = 'none';
+                }, 10000); // Hide after 10 seconds
+            });
         }
     </script>
 </body>
