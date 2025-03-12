@@ -92,8 +92,39 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <script src="config.js"></script>
-    <script src="script.js"></script>
+    <!-- Dynamic script loading for libraries -->
+    <script>
+        // Dynamically load HTML5-QRCode library
+        function loadLibrary(src, id) {
+            return new Promise((resolve, reject) => {
+                if (document.getElementById(id)) {
+                    resolve();
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = src;
+                script.id = id;
+                script.async = true;
+                script.onload = () => resolve();
+                script.onerror = () => reject(new Error(`Failed to load ${src}`));
+                document.head.appendChild(script);
+            });
+        }
+
+        // Load libraries sequentially
+        Promise.all([
+            loadLibrary('https://unpkg.com/html5-qrcode@2.3.8/dist/html5-qrcode.min.js', 'html5-qrcode-lib'),
+            loadLibrary('config.js', 'config-script'),
+            loadLibrary('script.js', 'main-script')
+        ]).catch(error => {
+            console.error('Library loading failed:', error);
+            document.getElementById('scanner-error').style.display = "block";
+            document.getElementById('scanner-error').innerHTML = `
+                <strong>Library Load Error:</strong> ${error.message}<br>
+                Please refresh the page or check your internet connection.
+            `;
+        });
+    </script>
 </body>
 </html>
