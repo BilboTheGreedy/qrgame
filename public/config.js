@@ -13,8 +13,8 @@ class TreasureHuntConfig {
             "QR_CODE_1": {
                 id: 1,
                 found: false,
-                clue: "Our first date was so special to me. I remember how nervous I was when we met? We ordered drinks and talked for hours and played games together.",
-                nextHint: "For your next clue, go to work and search your office... something is a bit strange..."
+                clue: "Our first date. I remember how nervous I was when we met? We ordered drinks and talked for hours... we played mario-kart (and i won)",
+                nextHint: "For your next clue, go to work and search your office for a QR code... something is a bit strange..."
             },
             "QR_CODE_2": {
                 id: 2,
@@ -32,7 +32,7 @@ class TreasureHuntConfig {
                 id: 4,
                 found: false,
                 clue: "Remember that adventurous day we went on a special journey together? I took so many pictures of you! Europe! France! UK!!!",
-                nextHint: "I require electricity to drive.... my umbilical cord is yellow and i keep it in my trunk"
+                nextHint: "I require electricity.... my umbilical cord is yellow and i keep it in my trunk"
             },
             "QR_CODE_5": {
                 id: 5,
