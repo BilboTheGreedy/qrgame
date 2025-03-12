@@ -37,8 +37,8 @@ class TreasureHuntConfig {
             "QR_CODE_5": {
                 id: 5,
                 found: false,
-                clue: "Its nice riding shotgun in the car!",
-                nextHint: "it can block the sun but it can also be a mirror (something attached to the roof)"
+                clue: "Yo! You found the hiding spot!",
+                nextHint: "Maybe its here somewhere?"
             }
         };
 
