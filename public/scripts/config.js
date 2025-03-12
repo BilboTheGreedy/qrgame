@@ -13,32 +13,32 @@ class TreasureHuntConfig {
             "QR_CODE_1": {
                 id: 1,
                 found: false,
-                clue: "Redhat",
-                nextHint: "You wear it"
+                clue: "I love bonbons! GODIS!",
+                nextHint: "Under the lid"
             },
             "QR_CODE_2": {
                 id: 2,
                 found: false,
-                clue: "Wooof Woof Candies",
+                clue: "Wooof Woof BonBon! Just like dad",
                 nextHint: "The lid feels a few grams heavier..."
             },
             "QR_CODE_3": {
                 id: 3,
                 found: false,
                 clue: "It certainly feels different this morning? what did i put in it?",
-                nextHint: "I carry everything you need for the day'"
+                nextHint: "I carry everything you need for the day.... where are all the chargers???'"
             },
             "QR_CODE_4": {
                 id: 4,
                 found: false,
-                clue: "Its big and blue",
+                clue: "Its big and blue. I love it.",
                 nextHint: "I require electricity.... my umbilical cord is yellow and i keep it in my trunk put it plugs in where?"
             },
             "QR_CODE_5": {
                 id: 5,
                 found: false,
-                clue: "Its nice riding shotgun",
-                nextHint: "Go to the passenger seat, open the glovebox."
+                clue: "Its nice riding shotgun in the car!",
+                nextHint: "it can block the sun but it can also be a mirror (something attached to the roof)"
             }
         };
 
@@ -71,10 +71,10 @@ class TreasureHuntConfig {
     loadTreasureLocation() {
         try {
             const storedLocation = localStorage.getItem('treasureLocation');
-            return storedLocation || "Look inside a special place that means something to both of us!";
+            return storedLocation || "Look inside the glove box of the car";
         } catch (error) {
             console.error('Error loading treasure location:', error);
-            return "Look inside a special place that means something to both of us!";
+            return "Look inside the glove box of the car";
         }
     }
 
