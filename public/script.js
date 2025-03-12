@@ -10,7 +10,7 @@ function checkCameraSupport() {
   return true;
 }
 
-// Show a specific screen
+// Show a specific screen and hide others
 function showScreen(screenId) {
   document.querySelectorAll('.screen').forEach(screen => {
     screen.classList.remove('active');
@@ -24,13 +24,13 @@ function updateProgressBar() {
   document.getElementById('progress-fill').style.width = `${width}%`;
 }
 
-// Start the game: show scanner and start scanning
+// Start the game: show scanner screen and begin scanning
 function startGame() {
   showScreen('scanner-screen');
   startScanner();
 }
 
-// Bind the Begin button on DOM load, and initialize progress and particles
+// Bind the Begin button on DOM load, and initialize saved progress and particles
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('begin-hunt-btn').addEventListener('click', startGame);
   loadSavedProgress();
@@ -44,6 +44,7 @@ function startScanner() {
   document.getElementById('camera-status').textContent = "Starting camera...";
   document.getElementById('scanner-error').style.display = "none";
 
+  // If a scanner is already running, stop it first
   if (html5QrCode && html5QrCode.isScanning) {
     html5QrCode.stop().then(() => {
       initializeScanner();
@@ -76,16 +77,31 @@ function initializeScanner() {
 
   document.getElementById('camera-status').textContent = "Accessing camera...";
 
-  html5QrCode.start(
+  // Start the scanner
+  const startPromise = html5QrCode.start(
     { facingMode: "environment" },
     config,
     qrCodeSuccessCallback,
     (errorMessage) => {
       console.error("QR scan error:", errorMessage);
     }
-  ).then(() => {
+  );
+
+  // Set a timeout to detect if the camera never starts (after 10 seconds)
+  const startTimeout = setTimeout(() => {
+    if (!html5QrCode.isScanning) {
+      document.getElementById('camera-status').textContent = "Camera access timeout. Please check your permissions.";
+      document.getElementById('scanner-error').style.display = "block";
+      document.getElementById('scanner-error').innerHTML = "Camera access timeout. Please ensure camera permissions are granted and try again.";
+    }
+  }, 10000);
+
+  // Handle successful start
+  startPromise.then(() => {
+    clearTimeout(startTimeout);
     document.getElementById('camera-status').textContent = "Camera active! Point at a QR code.";
   }).catch((err) => {
+    clearTimeout(startTimeout);
     console.error("Error starting scanner:", err);
     document.getElementById('scanner-error').style.display = "block";
     document.getElementById('scanner-error').innerHTML = 
@@ -324,7 +340,7 @@ function createConfetti() {
   }
 }
 
-// Create particles for visual enhancement
+// Create particle background on page load
 function createParticles() {
   const body = document.body;
   const particleCount = 30;
