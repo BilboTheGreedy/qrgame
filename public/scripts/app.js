@@ -51,24 +51,31 @@ function showManualEntry() {
 function initApp() {
     console.log("Initializing app");
     
-    // Log our startup status
-    console.log("Document loaded, libraries status:");
-    console.log("Html5Qrcode available:", typeof Html5Qrcode !== 'undefined');
-    console.log("QR codes config available:", typeof window.qrCodes !== 'undefined');
-    
-    // Bind event listeners
-    document.getElementById('begin-hunt-btn').addEventListener('click', startGame);
-    document.getElementById('manual-entry-btn').addEventListener('click', showManualEntry);
-    document.getElementById('continue-btn').addEventListener('click', returnToScanner);
-    document.getElementById('reset-btn').addEventListener('click', resetProgress);
-    
-    // Load saved progress
-    loadSavedProgress();
-    
-    // Create visual effects
-    createParticles();
-    
-    console.log('QR Code Treasure Hunt initialized');
+    // Wait a bit to allow potential async library loading
+    setTimeout(function() {
+        // Log our startup status
+        console.log("Document loaded, libraries status:");
+        console.log("Html5Qrcode available:", typeof Html5Qrcode !== 'undefined');
+        console.log("QR codes config available:", typeof window.qrCodes !== 'undefined');
+        
+        // Bind event listeners
+        document.getElementById('begin-hunt-btn').addEventListener('click', startGame);
+        document.getElementById('manual-entry-btn').addEventListener('click', showManualEntry);
+        document.getElementById('continue-btn').addEventListener('click', returnToScanner);
+        document.getElementById('reset-btn').addEventListener('click', resetProgress);
+        
+        // Load saved progress
+        loadSavedProgress();
+        
+        // Create visual effects
+        if (typeof createParticles === 'function') {
+            createParticles();
+        } else {
+            console.warn("createParticles function not available");
+        }
+        
+        console.log('QR Code Treasure Hunt initialized');
+    }, 500); // Give a short delay to ensure libraries are loaded
 }
 
 // Expose necessary functions to the global scope

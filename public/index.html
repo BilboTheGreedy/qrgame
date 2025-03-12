@@ -110,17 +110,96 @@
         </div>
     </div>
 
-    <!-- First load the library with integrity check and crossorigin -->
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/dist/html5-qrcode.min.js" integrity="sha384-KS7/KCrS2Fv97ZhXYb0kOWZFGM/+VqZCqqKbh1a+MDB/e5I3rCiAODvIP2Gp1/8P" crossorigin="anonymous"></script>
+    <!-- Try to load from CDN first -->
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/html5-qrcode.min.js"></script>
     
-    <!-- Add a fallback in case CDN fails -->
+    <!-- Add a check to confirm library loaded with multiple fallbacks -->
     <script>
-        // Check if the library loaded correctly
-        if (typeof Html5Qrcode === 'undefined') {
-            console.log("Primary CDN failed, trying fallback...");
+        // Create a function to check if the library is loaded
+        function checkQrLibrary() {
+            if (typeof Html5Qrcode !== 'undefined') {
+                console.log("HTML5-QRCode library loaded successfully");
+                return true;
+            }
+            return false;
+        }
+        
+        // Try to load the library with multiple fallbacks
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if library loaded from primary CDN
+            if (checkQrLibrary()) return;
+            
+            console.log("Primary CDN failed, trying fallback CDN...");
             var fallbackScript = document.createElement('script');
-            fallbackScript.src = "https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/dist/html5-qrcode.min.js";
+            fallbackScript.src = "https://unpkg.com/html5-qrcode";
+            
+            fallbackScript.onload = function() {
+                if (checkQrLibrary()) return;
+                console.error("Fallback CDN loaded but library not defined correctly");
+                loadLocalFallback();
+            };
+            
+            fallbackScript.onerror = function() {
+                console.error("Failed to load from fallback CDN");
+                loadLocalFallback();
+            };
+            
             document.head.appendChild(fallbackScript);
+        });
+        
+        // Function to load our local fallback version
+        function loadLocalFallback() {
+            console.log("Loading local fallback QR library...");
+            var localScript = document.createElement('script');
+            localScript.src = "scripts/local-qrcode-lib.js";
+            
+            localScript.onload = function() {
+                console.log("Local fallback QR library loaded");
+                if (checkQrLibrary()) {
+                    console.log("Using simplified local QR scanner");
+                } else {
+                    console.error("Something is seriously wrong - even local fallback failed");
+                    // Create a div to show manual download option
+                    var errorDiv = document.createElement('div');
+                    errorDiv.style.position = 'fixed';
+                    errorDiv.style.top = '50%';
+                    errorDiv.style.left = '50%';
+                    errorDiv.style.transform = 'translate(-50%, -50%)';
+                    errorDiv.style.backgroundColor = 'rgba(255,255,255,0.95)';
+                    errorDiv.style.padding = '20px';
+                    errorDiv.style.borderRadius = '10px';
+                    errorDiv.style.boxShadow = '0 0 20px rgba(0,0,0,0.3)';
+                    errorDiv.style.zIndex = '9999';
+                    errorDiv.style.maxWidth = '80%';
+                    errorDiv.style.textAlign = 'center';
+                    
+                    errorDiv.innerHTML = `
+                        <h3 style="color: #ff4d8d; margin-bottom: 15px;">QR Scanner Could Not Load</h3>
+                        <p>It seems your browser is blocking external libraries.</p>
+                        <p style="margin: 15px 0;">You can continue using the app with manual code entry:</p>
+                        <button id="continueManually" style="background: #ff4d8d; color: white; border: none; padding: 10px 15px; border-radius: 5px; margin: 10px; cursor: pointer;">Continue with Manual Entry</button>
+                        <button id="dismissError" style="background: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 5px; margin: 10px; cursor: pointer;">Dismiss</button>
+                    `;
+                    
+                    document.body.appendChild(errorDiv);
+                    
+                    document.getElementById('continueManually').addEventListener('click', function() {
+                        errorDiv.remove();
+                        // Show welcome screen
+                        showScreen('welcome-screen');
+                        // Override startScanner to always show manual entry
+                        window.startScanner = function() {
+                            showManualEntry();
+                        };
+                    });
+                    
+                    document.getElementById('dismissError').addEventListener('click', function() {
+                        errorDiv.remove();
+                    });
+                }
+            };
+            
+            document.head.appendChild(localScript);
         }
     </script>
     

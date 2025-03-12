@@ -22,9 +22,13 @@ function checkCameraSupport() {
     
         // Check if Html5Qrcode is available
         if (typeof Html5Qrcode === 'undefined') {
+            console.error('QR Scanner library not loaded.');
             reject(new Error('QR Scanner library not loaded.'));
             return;
         }
+        
+        // Log that we're using the real or fallback library
+        console.log("Using QR library:", Html5Qrcode.hasOwnProperty('_instance') ? "Original" : "Fallback");
 
         // Detect iOS
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -75,6 +79,22 @@ function startScanner() {
     // Listen for orientation changes
     window.addEventListener('orientationchange', handleOrientationChange);
     
+    // First check if Html5Qrcode is available
+    if (typeof Html5Qrcode === 'undefined') {
+        console.error('QR Scanner library not available, using manual entry');
+        if (cameraStatus) cameraStatus.textContent = "QR Scanner not available.";
+        if (scannerError) {
+            scannerError.style.display = "block";
+            scannerError.innerHTML = `
+                <strong>QR Scanner Not Available</strong><br>
+                The QR code scanner library could not be loaded.<br>
+                <button id="useManualEntryBtn" style="background: #ff4d8d; color: white; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 10px; cursor: pointer;">Use Manual Entry</button>
+            `;
+            document.getElementById('useManualEntryBtn').addEventListener('click', showManualEntry);
+        }
+        return;
+    }
+    
     // Perform comprehensive camera support check
     checkCameraSupport()
         .then(() => initializeScanner())
@@ -94,7 +114,9 @@ function startScanner() {
                         <li>Try closing and reopening the app</li>
                         <li>Restart your device if issues persist</li>
                     </ul>
+                    <button id="useManualEntryBtnError" style="background: #ff4d8d; color: white; border: none; padding: 8px 15px; border-radius: 5px; margin-top: 10px; cursor: pointer;">Use Manual Entry Instead</button>
                 `;
+                document.getElementById('useManualEntryBtnError').addEventListener('click', showManualEntry);
             }
         });
 }
