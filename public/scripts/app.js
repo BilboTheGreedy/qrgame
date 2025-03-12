@@ -24,6 +24,13 @@ function showScreen(screenId) {
 // Start the game
 function startGame() {
     console.log('Starting the hunt');
+    
+    // First check if Html5Qrcode is available
+    if (typeof Html5Qrcode === 'undefined') {
+        alert("QR Scanner library not loaded. Please check your internet connection and refresh the page.");
+        return;
+    }
+    
     showScreen('scanner-screen');
     startScanner();
 }

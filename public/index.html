@@ -11,7 +11,7 @@
     <meta http-equiv="Permissions-Policy" content="interest-cohort=(), camera=self">
     <!-- PWA icons for iOS home screen (optional but recommended) -->
     <link rel="apple-touch-icon" href="assets/icon-192.png">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; media-src 'self'; frame-src 'self';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com https://cdn.jsdelivr.net 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; media-src 'self'; frame-src 'self';">
     <!-- Prevent touch delays on mobile devices -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="styles/main.css">
@@ -110,12 +110,31 @@
         </div>
     </div>
 
-  <!-- Load external library first -->
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/dist/html5-qrcode.min.js"></script>
-  <!-- Load configuration and core scripts -->
-  <script src="scripts/config.js"></script>
-  <script src="scripts/app.js"></script>
-  <script src="scripts/scanner.js"></script>
-  <script src="scripts/progress.js"></script>
+    <!-- First load the library with integrity check and crossorigin -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/dist/html5-qrcode.min.js" integrity="sha384-KS7/KCrS2Fv97ZhXYb0kOWZFGM/+VqZCqqKbh1a+MDB/e5I3rCiAODvIP2Gp1/8P" crossorigin="anonymous"></script>
+    
+    <!-- Add a fallback in case CDN fails -->
+    <script>
+        // Check if the library loaded correctly
+        if (typeof Html5Qrcode === 'undefined') {
+            console.log("Primary CDN failed, trying fallback...");
+            var fallbackScript = document.createElement('script');
+            fallbackScript.src = "https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/dist/html5-qrcode.min.js";
+            document.head.appendChild(fallbackScript);
+        }
+    </script>
+    
+    <!-- Then load the configuration -->
+    <script src="scripts/config.js"></script>
+    
+    <!-- Then load utility scripts -->
+    <script src="scripts/ui-effects.js"></script>
+    <script src="scripts/progress.js"></script>
+    
+    <!-- Then load the scanner functionality -->
+    <script src="scripts/scanner.js"></script>
+    
+    <!-- Finally load the main app script -->
+    <script src="scripts/app.js"></script>
 </body>
 </html>

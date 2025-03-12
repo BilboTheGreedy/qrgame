@@ -4,9 +4,15 @@
  * Handles visual effects and animations for the app
  */
 
-// Create particle background effect
+// Function to create particle background effect
 function createParticles() {
+    console.log("Creating particles");
     const container = document.querySelector('.app-container');
+    if (!container) {
+        console.error("Container not found for particles");
+        return;
+    }
+    
     const particleCount = 20;
     
     for (let i = 0; i < particleCount; i++) {
@@ -33,9 +39,15 @@ function createParticles() {
     }
 }
 
-// Create confetti effect for the treasure screen
+// Function to create confetti effect for the treasure screen
 function createConfetti() {
+    console.log("Creating confetti");
     const container = document.querySelector('.treasure-complete');
+    if (!container) {
+        console.error("Container not found for confetti");
+        return;
+    }
+    
     const colors = ['#2196F3', '#03A9F4', '#00BCD4', '#E91E63', '#FFC107'];
     const confettiCount = 100;
     
@@ -65,3 +77,10 @@ function createConfetti() {
         container.appendChild(confetti);
     }
 }
+
+// Export functions to window object to make them globally available
+window.createParticles = createParticles;
+window.createConfetti = createConfetti;
+
+// Log that UI effects script has loaded
+console.log("UI effects script loaded successfully");
