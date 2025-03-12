@@ -15,6 +15,7 @@ const MIME_TYPES = {
   '.svg': 'image/svg+xml'
 };
 
+
 const server = http.createServer((req, res) => {
   // Normalize the URL by removing query strings, etc.
   let filePath = path.join('public', req.url === '/' ? 'index.html' : req.url);
