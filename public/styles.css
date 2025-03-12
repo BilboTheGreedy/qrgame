@@ -1,8 +1,9 @@
 .btn-reset {
     margin-bottom: 1rem;
     position: relative;
-    z-index: 10; /* Ensure the button is clickable */
-}:root {
+    z-index: 10;
+}
+:root {
     --primary: #2196F3;
     --primary-light: #BBDEFB;
     --secondary: #607D8B;
@@ -26,9 +27,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Changed from center to flex-start */
+    justify-content: flex-start;
     padding: 1rem;
-    overflow-x: hidden; /* Allow vertical scrolling */
+    overflow-x: hidden;
     position: relative;
 }
 
@@ -52,14 +53,14 @@ body::before {
     overflow: hidden;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1);
     position: relative;
-    min-height: 480px; /* Changed from fixed height to min-height */
-    max-height: 90vh; /* Use viewport height instead of fixed pixel value */
+    min-height: 480px;
+    max-height: 90vh;
     display: flex;
     flex-direction: column;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.18);
-    margin-bottom: 1rem; /* Add some margin at the bottom */
+    margin-bottom: 1rem;
 }
 
 .header {
@@ -464,9 +465,9 @@ h1 {
     color: var(--dark);
     opacity: 0.7;
     flex-shrink: 0;
-    position: relative; /* Ensure it's in the normal flow */
-    bottom: 0; /* Keep it at the bottom of its container */
-    width: 100%; /* Full width */
+    position: relative;
+    bottom: 0;
+    width: 100%;
 }
 
 /* Confetti */
@@ -641,7 +642,6 @@ h1 {
     to { transform: translateY(0); opacity: 1; }
 }
 
-/* Cool animated background for header */
 .header::before {
     content: '';
     position: absolute;

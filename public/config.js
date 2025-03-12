@@ -43,7 +43,6 @@ class TreasureHuntConfig {
         };
 
         try {
-            // Check if local storage has custom configuration
             const storedConfig = localStorage.getItem('qrCodesConfig');
             if (storedConfig) {
                 const parsedConfig = JSON.parse(storedConfig);
@@ -59,7 +58,6 @@ class TreasureHuntConfig {
     // Validate QR Codes configuration
     validateQRCodesConfig(config) {
         const requiredKeys = ['id', 'clue', 'nextHint', 'found'];
-        
         return Object.values(config).every(qrCode => 
             requiredKeys.every(key => 
                 qrCode.hasOwnProperty(key) && 
@@ -80,21 +78,17 @@ class TreasureHuntConfig {
         }
     }
 
-    // Method to update configuration
+    // Update configuration
     updateConfig(newConfig) {
         if (this.validateQRCodesConfig(newConfig.qrCodes)) {
             this.qrCodes = newConfig.qrCodes;
             this.treasureLocation = newConfig.treasureLocation || this.treasureLocation;
-
-            // Persist to local storage
             try {
                 localStorage.setItem('qrCodesConfig', JSON.stringify(this.qrCodes));
                 localStorage.setItem('treasureLocation', this.treasureLocation);
             } catch (error) {
                 console.error('Could not save configuration:', error);
             }
-
-            // Dispatch event for configuration change
             window.dispatchEvent(new CustomEvent('treasureHuntConfigUpdate', { 
                 detail: { config: this } 
             }));
@@ -108,22 +102,14 @@ class TreasureHuntConfig {
         Object.values(this.qrCodes).forEach(qrCode => {
             qrCode.found = false;
         });
-
-        // Clear local storage progress
         localStorage.removeItem('treasureHuntProgress');
-        
-        // Update local storage config
         localStorage.setItem('qrCodesConfig', JSON.stringify(this.qrCodes));
-
-        // Dispatch reset event
         window.dispatchEvent(new CustomEvent('treasureHuntProgressReset'));
     }
 }
 
-// Instantiate and export
 const qrCodes = new TreasureHuntConfig().qrCodes;
 const treasureLocation = new TreasureHuntConfig().treasureLocation;
 
-// Make available globally
 window.qrCodes = qrCodes;
 window.treasureLocation = treasureLocation;

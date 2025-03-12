@@ -23,7 +23,7 @@
                     <p>Find and scan all 5 codes to discover where your special treasure is waiting!</p>
                     <p>Your first clue: <em>"Look where we keep our memories from the past year..."</em></p>
                 </div>
-                <button class="btn btn-center animate__animated animate__fadeIn animate__delay-2s" onclick="startGame()">Begin the Hunt</button>
+                <button id="begin-hunt-btn" class="btn btn-center animate__animated animate__fadeIn animate__delay-2s">Begin the Hunt</button>
             </div>
             
             <!-- Scanner Screen -->
@@ -67,12 +67,8 @@
                 
                 <div class="clue-container animate__animated animate__fadeIn">
                     <div class="puzzle-title">Your Clue:</div>
-                    <div id="clue-content">
-                        <!-- Clue content will be displayed here -->
-                    </div>
-                    <div class="next-hint" id="next-hint">
-                        <!-- Next location hint will be shown here -->
-                    </div>
+                    <div id="clue-content"></div>
+                    <div class="next-hint" id="next-hint"></div>
                 </div>
                 
                 <button class="btn btn-center animate__animated animate__fadeIn animate__delay-1s" onclick="returnToScanner()">Continue Hunting</button>
@@ -86,9 +82,7 @@
                     <div class="treasure-message animate__animated animate__fadeIn animate__delay-1s">
                         You've found all the QR codes and completed the treasure hunt!
                     </div>
-                    <div class="treasure-location animate__animated animate__fadeIn animate__delay-2s" id="treasure-location">
-                        <!-- Treasure location will be displayed here -->
-                    </div>
+                    <div class="treasure-location animate__animated animate__fadeIn animate__delay-2s" id="treasure-location"></div>
                 </div>
             </div>
         </div>

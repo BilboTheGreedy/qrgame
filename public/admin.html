@@ -195,10 +195,7 @@
         
         // Function to update hints from config
         function updateHintsFromConfig() {
-            // Update hints
             for (let i = 1; i <= 5; i++) {
-                const nextId = i < 5 ? i + 1 : 1; // Wrap around to 1 for the last QR code
-                
                 if (qrCodes[`QR_CODE_${i}`]) {
                     const hintElement = document.getElementById(`hint-${i}`);
                     if (hintElement) {
@@ -207,35 +204,27 @@
                 }
             }
             
-            // Update treasure location
             const treasureElement = document.getElementById('treasure-location');
             if (treasureElement && treasureLocation) {
                 treasureElement.textContent = `"${treasureLocation}"`;
             }
         }
         
-        // Update hints when page loads
         document.addEventListener('DOMContentLoaded', updateHintsFromConfig);
         
-        // Function to refresh from config
         function refreshFromConfig() {
-            // Remove existing config script
             const existingScript = document.querySelector('script[src*="config.js"]');
             if (existingScript) {
                 existingScript.remove();
             }
             
-            // Create new script element with cache busting
             const newScript = document.createElement('script');
             newScript.src = `config.js?t=${new Date().getTime()}`;
-            
-            // When script loads, update hints
             newScript.onload = function() {
                 updateHintsFromConfig();
                 alert('Configuration refreshed successfully!');
             };
             
-            // Add script to document
             document.body.appendChild(newScript);
         }
     </script>

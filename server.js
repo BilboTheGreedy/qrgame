@@ -69,7 +69,7 @@ app.use((req, res, next) => {
 
 // Middleware to parse JSON requests
 app.use(express.json({ 
-    limit: '10kb', // Limit payload size
+    limit: '10kb',
     verify: (req, res, buf) => {
         try {
             JSON.parse(buf.toString());
@@ -97,8 +97,8 @@ async function generateQRCodes() {
             try {
                 await qrcode.toFile(qrPath, key, {
                     color: {
-                        dark: '#ff4d8d',  // Pink color for dots
-                        light: '#FFFFFF'  // White background
+                        dark: '#ff4d8d',
+                        light: '#FFFFFF'
                     },
                     width: 300,
                     margin: 1
@@ -136,7 +136,6 @@ app.post('/api/verify-qr', (req, res) => {
 app.post('/api/get-treasure', (req, res) => {
     const { foundCodes } = req.body;
     
-    // Verify all QR codes have been found
     if (foundCodes && foundCodes.length === 5) {
         res.json({
             success: true,
