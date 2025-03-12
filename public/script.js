@@ -1,7 +1,7 @@
 let html5QrCode;
 let foundCodes = 0;
 
-// Create background particles
+// Create particles for visual enhancement
 function createParticles() {
     const body = document.body;
     const particleCount = 30;
@@ -10,19 +10,15 @@ function createParticles() {
         const particle = document.createElement('div');
         particle.className = 'particle';
         
-        // Random size between 2px and 6px
         const size = Math.random() * 4 + 2;
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
         
-        // Random position
         particle.style.top = Math.random() * 100 + 'vh';
         particle.style.left = Math.random() * 100 + 'vw';
         
-        // Random opacity
         particle.style.opacity = Math.random() * 0.6 + 0.1;
         
-        // Add animation for floating effect
         const duration = Math.random() * 60 + 30;
         const delay = Math.random() * 10;
         
@@ -32,23 +28,17 @@ function createParticles() {
     }
 }
 
-// Load saved progress on page load
-window.onload = function() {
-    loadSavedProgress();
-    createParticles();
-};
-
-// Save progress to localStorage
+// Save progress tracking
 function saveProgress() {
     const progress = {
         foundCodes: foundCodes,
-        qrCodes: qrCodes
+        qrCodes: window.qrCodes
     };
     localStorage.setItem('treasureHuntProgress', JSON.stringify(progress));
     console.log('Progress saved');
 }
 
-// Load progress from localStorage
+// Load saved progress
 function loadSavedProgress() {
     const savedProgress = localStorage.getItem('treasureHuntProgress');
     if (savedProgress) {
@@ -56,17 +46,17 @@ function loadSavedProgress() {
         
         // Restore QR codes state
         for (const key in progress.qrCodes) {
-            if (qrCodes[key]) {
-                qrCodes[key].found = progress.qrCodes[key].found;
+            if (window.qrCodes[key]) {
+                window.qrCodes[key].found = progress.qrCodes[key].found;
             }
         }
         
         // Count found codes
         foundCodes = 0;
-        for (const key in qrCodes) {
-            if (qrCodes[key].found) {
+        for (const key in window.qrCodes) {
+            if (window.qrCodes[key].found) {
                 foundCodes++;
-                document.getElementById(`point-${qrCodes[key].id}`).classList.add('active');
+                document.getElementById(`point-${window.qrCodes[key].id}`).classList.add('active');
             }
         }
         
@@ -77,7 +67,7 @@ function loadSavedProgress() {
         
         // If all codes are found, show the treasure screen
         if (foundCodes === 5) {
-            document.getElementById('treasure-location').textContent = treasureLocation;
+            document.getElementById('treasure-location').textContent = window.treasureLocation;
             showScreen('treasure-screen');
             createConfetti();
         }
@@ -156,7 +146,6 @@ function initializeScanner() {
         config,
         qrCodeSuccessCallback,
         (errorMessage) => {
-            // Just log errors, don't display during scanning
             console.error(errorMessage);
         }
     ).then(() => {
@@ -173,8 +162,8 @@ function initializeScanner() {
 // Process a scanned QR code
 function processQrCode(qrValue) {
     // Check if this is one of our QR codes
-    if (qrCodes[qrValue]) {
-        const qrCode = qrCodes[qrValue];
+    if (window.qrCodes[qrValue]) {
+        const qrCode = window.qrCodes[qrValue];
         
         // Check if this code has already been found
         if (qrCode.found) {
@@ -204,7 +193,7 @@ function processQrCode(qrValue) {
         // If all codes are found, show the treasure screen
         if (foundCodes === 5) {
             setTimeout(() => {
-                document.getElementById('treasure-location').textContent = treasureLocation;
+                document.getElementById('treasure-location').textContent = window.treasureLocation;
                 showScreen('treasure-screen');
                 createConfetti();
             }, 5000);
@@ -303,8 +292,8 @@ function returnToScanner() {
 function resetProgress() {
     if (confirm("Are you sure you want to reset all progress? This cannot be undone.")) {
         // Reset QR codes
-        for (const key in qrCodes) {
-            qrCodes[key].found = false;
+        for (const key in window.qrCodes) {
+            window.qrCodes[key].found = false;
         }
         
         // Reset UI
@@ -388,3 +377,9 @@ function createConfetti() {
         }, i * 25);  // More staggered for a longer effect
     }
 }
+
+// Create particle background on page load
+window.onload = function() {
+    loadSavedProgress();
+    createParticles();
+};

@@ -1,36 +1,129 @@
-// QR Code data and clues
-const qrCodesConfig = {
-    "QR_CODE_1": {
-        id: 1,
-        clue: "Our first date was so special to me. I remember how nervous I was when we met at that kappa bar? We ordered drinks and we talked for hours and played mario-kart (i won ofc!)",
-        nextHint: "For your next clue, go to work and search your office... something is a bit strange..."
-    },
-    "QR_CODE_2": {
-        id: 2,
-        clue: "Remember our first trip together? We went to Stockholm and stayed the night at a hotel in Old Town. We took many pictures together!",
-        nextHint: "for the next clue... go to one of the fishrooms.... there might be something hiding...."
-    },
-    "QR_CODE_3": {
-        id: 3,
-        clue: "And the next trip we went to Uppsala which was super nice! and we took even more pictures together",
-        nextHint: "You took me with you this morning. 'I carry everything you need for the day'"
-    },
-    "QR_CODE_4": {
-        id: 4,
-        clue: "Remember after Uppsala what we did? We went on our first motorcycle ride!!! and i took so many pictures of you!!! PANDOU-COOOL!",
-        nextHint: "the passcode is 1234... not the most secure... remove your phone case and check behind your bank card!"
-    },
-    "QR_CODE_5": {
-        id: 5,
-        clue: "And then we went through Europe on a car journey to France! And we even went outside EU too!!! and we took SOOOOOOOO MANY PICTURES!",
-        nextHint: "Bluie really have a huge trunk...  wish we had this when we went to france the first time...."
-    },
-    "QR_CODE_6": {
-        id: 6,
-        clue: "I can't wait to create more memories and take pictures together!",
-        nextHint: "You've found all the clues! Now for your treasure..."
-    }
-};
+// Treasure Hunt Configuration
 
-// Customize this with the actual location of the gift
-const treasureLocation = "Look inside the glovebox of Bluiee";
+class TreasureHuntConfig {
+    constructor() {
+        this.version = '1.1.0';
+        this.qrCodes = this.loadQRCodes();
+        this.treasureLocation = this.loadTreasureLocation();
+    }
+
+    // Load QR Codes with validation
+    loadQRCodes() {
+        const defaultConfig = {
+            "QR_CODE_1": {
+                id: 1,
+                found: false,
+                clue: "Our first date was so special to me. I remember how nervous I was when we met? We ordered drinks and talked for hours and played games together.",
+                nextHint: "For your next clue, go to work and search your office... something is a bit strange..."
+            },
+            "QR_CODE_2": {
+                id: 2,
+                found: false,
+                clue: "Remember our first trip together? We went to Stockholm old town and stayed the night. We took many pictures together!",
+                nextHint: "For the next clue... look somewhere unexpected... (something smells fishy...)"
+            },
+            "QR_CODE_3": {
+                id: 3,
+                found: false,
+                clue: "And the next trip we went on was incredible! Uppsala! We took even more pictures together and created amazing memories.",
+                nextHint: "You took me with you this morning. 'I carry everything you need for the day'"
+            },
+            "QR_CODE_4": {
+                id: 4,
+                found: false,
+                clue: "Remember that adventurous day we went on a special journey together? I took so many pictures of you! Europe! France! UK!!!",
+                nextHint: "I require electricity to drive.... my umbilical cord is yellow and i keep it in my trunk"
+            },
+            "QR_CODE_5": {
+                id: 5,
+                found: false,
+                clue: "Then we went on an incredible journey across different places! And we took SO MANY PICTURES! Paris baby",
+                nextHint: "The glovebox"
+            }
+        };
+
+        try {
+            // Check if local storage has custom configuration
+            const storedConfig = localStorage.getItem('qrCodesConfig');
+            if (storedConfig) {
+                const parsedConfig = JSON.parse(storedConfig);
+                return this.validateQRCodesConfig(parsedConfig) ? parsedConfig : defaultConfig;
+            }
+            return defaultConfig;
+        } catch (error) {
+            console.error('Error loading QR codes config:', error);
+            return defaultConfig;
+        }
+    }
+
+    // Validate QR Codes configuration
+    validateQRCodesConfig(config) {
+        const requiredKeys = ['id', 'clue', 'nextHint', 'found'];
+        
+        return Object.values(config).every(qrCode => 
+            requiredKeys.every(key => 
+                qrCode.hasOwnProperty(key) && 
+                (key === 'found' ? typeof qrCode[key] === 'boolean' : 
+                 typeof qrCode[key] === 'string' && qrCode[key].trim().length > 0)
+            )
+        );
+    }
+
+    // Load treasure location with fallback
+    loadTreasureLocation() {
+        try {
+            const storedLocation = localStorage.getItem('treasureLocation');
+            return storedLocation || "Look inside a special place that means something to both of us!";
+        } catch (error) {
+            console.error('Error loading treasure location:', error);
+            return "Look inside a special place that means something to both of us!";
+        }
+    }
+
+    // Method to update configuration
+    updateConfig(newConfig) {
+        if (this.validateQRCodesConfig(newConfig.qrCodes)) {
+            this.qrCodes = newConfig.qrCodes;
+            this.treasureLocation = newConfig.treasureLocation || this.treasureLocation;
+
+            // Persist to local storage
+            try {
+                localStorage.setItem('qrCodesConfig', JSON.stringify(this.qrCodes));
+                localStorage.setItem('treasureLocation', this.treasureLocation);
+            } catch (error) {
+                console.error('Could not save configuration:', error);
+            }
+
+            // Dispatch event for configuration change
+            window.dispatchEvent(new CustomEvent('treasureHuntConfigUpdate', { 
+                detail: { config: this } 
+            }));
+        } else {
+            console.error('Invalid configuration provided');
+        }
+    }
+
+    // Reset progress
+    resetProgress() {
+        Object.values(this.qrCodes).forEach(qrCode => {
+            qrCode.found = false;
+        });
+
+        // Clear local storage progress
+        localStorage.removeItem('treasureHuntProgress');
+        
+        // Update local storage config
+        localStorage.setItem('qrCodesConfig', JSON.stringify(this.qrCodes));
+
+        // Dispatch reset event
+        window.dispatchEvent(new CustomEvent('treasureHuntProgressReset'));
+    }
+}
+
+// Instantiate and export
+const qrCodes = new TreasureHuntConfig().qrCodes;
+const treasureLocation = new TreasureHuntConfig().treasureLocation;
+
+// Make available globally
+window.qrCodes = qrCodes;
+window.treasureLocation = treasureLocation;
