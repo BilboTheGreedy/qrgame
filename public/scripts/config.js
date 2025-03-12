@@ -13,31 +13,31 @@ class TreasureHuntConfig {
             "QR_CODE_1": {
                 id: 1,
                 found: false,
-                clue: "Our first date. I remember how nervous I was when we met? We ordered drinks and talked for hours... we played mario-kart (and i won)",
-                nextHint: "For your next clue, go to work and search your office for a QR code... something is a bit strange..."
+                clue: "Redhat",
+                nextHint: "You wear it"
             },
             "QR_CODE_2": {
                 id: 2,
                 found: false,
-                clue: "Remember our first trip together? We went to Stockholm old town and stayed the night. We took many pictures together!",
-                nextHint: "For the next clue... look somewhere unexpected... (something smells fishy...)"
+                clue: "Wooof Woof Candies",
+                nextHint: "The lid feels a few grams heavier..."
             },
             "QR_CODE_3": {
                 id: 3,
                 found: false,
-                clue: "And the next trip we went on was incredible! Uppsala! We took even more pictures together and created amazing memories.",
-                nextHint: "You took me with you this morning. 'I carry everything you need for the day'"
+                clue: "It certainly feels different this morning? what did i put in it?",
+                nextHint: "I carry everything you need for the day'"
             },
             "QR_CODE_4": {
                 id: 4,
                 found: false,
-                clue: "Remember that adventurous day we went on a special journey together? I took so many pictures of you! Europe! France! UK!!!",
-                nextHint: "I require electricity.... my umbilical cord is yellow and i keep it in my trunk"
+                clue: "Its big and blue",
+                nextHint: "I require electricity.... my umbilical cord is yellow and i keep it in my trunk put it plugs in where?"
             },
             "QR_CODE_5": {
                 id: 5,
                 found: false,
-                clue: "Then we went on an incredible journey across different places! And we took SO MANY PICTURES! Paris baby!",
+                clue: "Its nice riding shotgun",
                 nextHint: "Go to the passenger seat, open the glovebox."
             }
         };
