@@ -123,34 +123,18 @@
                 <div class="qr-number">QR Code #1</div>
                 <img src="/qrcodes/QR_CODE_1.png" alt="QR Code 1">
                 <div class="qr-hint">
-                    <strong>Where to hide:</strong> "Look where we keep our memories from the past year..."
+                    <strong>Where to hide:</strong> <span id="hint-1">"Look where we keep our memories from the past year..."</span>
                 </div>
                 <div class="action-buttons no-print">
                     <button onclick="downloadQR(1)">Download</button>
                 </div>
             </div>
-        </div>
-        
-        <div class="no-print">
-            <h2>Treasure Location</h2>
-            <p>Make sure to hide the gift at: <strong>"Look inside the bottom drawer of your dresser!"</strong></p>
-            <p>You can customize this location in the server.js file.</p>
-        </div>
-    </div>
-
-    <script>
-        function downloadQR(id) {
-            window.location.href = `/api/download-qr/${id}`;
-        }
-    </script>
-</body>
-</html>>
             
             <div class="qr-item">
                 <div class="qr-number">QR Code #2</div>
                 <img src="/qrcodes/QR_CODE_2.png" alt="QR Code 2">
                 <div class="qr-hint">
-                    <strong>Where to hide:</strong> "Look where we keep something sweet..."
+                    <strong>Where to hide:</strong> <span id="hint-2">"Look where we keep something sweet..."</span>
                 </div>
                 <div class="action-buttons no-print">
                     <button onclick="downloadQR(2)">Download</button>
@@ -161,7 +145,7 @@
                 <div class="qr-number">QR Code #3</div>
                 <img src="/qrcodes/QR_CODE_3.png" alt="QR Code 3">
                 <div class="qr-hint">
-                    <strong>Where to hide:</strong> "Look where we keep our favorite books..."
+                    <strong>Where to hide:</strong> <span id="hint-3">"Look where we keep our favorite books..."</span>
                 </div>
                 <div class="action-buttons no-print">
                     <button onclick="downloadQR(3)">Download</button>
@@ -172,7 +156,7 @@
                 <div class="qr-number">QR Code #4</div>
                 <img src="/qrcodes/QR_CODE_4.png" alt="QR Code 4">
                 <div class="qr-hint">
-                    <strong>Where to hide:</strong> "Look where music plays..."
+                    <strong>Where to hide:</strong> <span id="hint-4">"Look where music plays..."</span>
                 </div>
                 <div class="action-buttons no-print">
                     <button onclick="downloadQR(4)">Download</button>
@@ -183,9 +167,77 @@
                 <div class="qr-number">QR Code #5</div>
                 <img src="/qrcodes/QR_CODE_5.png" alt="QR Code 5">
                 <div class="qr-hint">
-                    <strong>Where to hide:</strong> "Check where I left you a note last Valentine's Day..."
+                    <strong>Where to hide:</strong> <span id="hint-5">"Check where I left you a note last Valentine's Day..."</span>
                 </div>
                 <div class="action-buttons no-print">
                     <button onclick="downloadQR(5)">Download</button>
                 </div>
-            </div
+            </div>
+        </div>
+        
+        <div class="no-print">
+            <h2>Treasure Location</h2>
+            <p>Make sure to hide the gift at: <strong id="treasure-location">"Look inside the bottom drawer of your dresser!"</strong></p>
+            <p>You can customize this location in the config.js file.</p>
+            
+            <button class="print-all" onclick="refreshFromConfig()">Refresh from Config</button>
+        </div>
+    </div>
+
+    <!-- Load config.js -->
+    <script src="config.js"></script>
+    
+    <script>
+        // Function to download QR code
+        function downloadQR(id) {
+            window.location.href = `/api/download-qr/${id}`;
+        }
+        
+        // Function to update hints from config
+        function updateHintsFromConfig() {
+            // Update hints
+            for (let i = 1; i <= 5; i++) {
+                const nextId = i < 5 ? i + 1 : 1; // Wrap around to 1 for the last QR code
+                
+                if (qrCodes[`QR_CODE_${i}`]) {
+                    const hintElement = document.getElementById(`hint-${i}`);
+                    if (hintElement) {
+                        hintElement.textContent = `"${qrCodes[`QR_CODE_${i}`].nextHint}"`;
+                    }
+                }
+            }
+            
+            // Update treasure location
+            const treasureElement = document.getElementById('treasure-location');
+            if (treasureElement && treasureLocation) {
+                treasureElement.textContent = `"${treasureLocation}"`;
+            }
+        }
+        
+        // Update hints when page loads
+        document.addEventListener('DOMContentLoaded', updateHintsFromConfig);
+        
+        // Function to refresh from config
+        function refreshFromConfig() {
+            // Remove existing config script
+            const existingScript = document.querySelector('script[src*="config.js"]');
+            if (existingScript) {
+                existingScript.remove();
+            }
+            
+            // Create new script element with cache busting
+            const newScript = document.createElement('script');
+            newScript.src = `config.js?t=${new Date().getTime()}`;
+            
+            // When script loads, update hints
+            newScript.onload = function() {
+                updateHintsFromConfig();
+                alert('Configuration refreshed successfully!');
+            };
+            
+            // Add script to document
+            document.body.appendChild(newScript);
+        }
+    </script>
+</body>
+</html>
