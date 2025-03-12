@@ -1,12 +1,19 @@
 let html5QrCode;
 let foundCodes = 0;
 
-// Check for camera support
+// Check for camera support and HTTPS secure context
 function checkCameraSupport() {
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+  if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
     alert('Camera access is not supported on this device.');
+    console.error('navigator.mediaDevices.getUserMedia not available');
     return false;
   }
+  if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+    alert('Camera access requires a secure context (HTTPS).');
+    console.error('Page not served over HTTPS');
+    return false;
+  }
+  console.log('Camera support verified:', navigator.mediaDevices);
   return true;
 }
 
@@ -26,13 +33,19 @@ function updateProgressBar() {
 
 // Start the game: show scanner screen and begin scanning
 function startGame() {
+  console.log('Start game button pressed');
   showScreen('scanner-screen');
   startScanner();
 }
 
 // Bind the Begin button on DOM load, and initialize saved progress and particles
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('begin-hunt-btn').addEventListener('click', startGame);
+  const beginBtn = document.getElementById('begin-hunt-btn');
+  if (beginBtn) {
+    beginBtn.addEventListener('click', startGame);
+  } else {
+    console.error('Begin Hunt button not found');
+  }
   loadSavedProgress();
   createParticles();
 });
@@ -58,6 +71,11 @@ function startScanner() {
 }
 
 function initializeScanner() {
+  if (typeof Html5Qrcode === 'undefined') {
+    console.error("Html5Qrcode library is not loaded.");
+    alert("QR Scanner library not available.");
+    return;
+  }
   html5QrCode = new Html5Qrcode("reader");
 
   const qrCodeSuccessCallback = (decodedText) => {
@@ -65,7 +83,7 @@ function initializeScanner() {
       console.log("Scanner stopped after successful scan");
       processQrCode(decodedText);
     }).catch(err => {
-      console.error("Error stopping scanner:", err);
+      console.error("Error stopping scanner after scan:", err);
     });
   };
 
@@ -77,7 +95,7 @@ function initializeScanner() {
 
   document.getElementById('camera-status').textContent = "Accessing camera...";
 
-  // Start the scanner
+  // Start the scanner and set a timeout to detect if the camera never starts
   const startPromise = html5QrCode.start(
     { facingMode: "environment" },
     config,
@@ -87,19 +105,19 @@ function initializeScanner() {
     }
   );
 
-  // Set a timeout to detect if the camera never starts (after 10 seconds)
   const startTimeout = setTimeout(() => {
     if (!html5QrCode.isScanning) {
       document.getElementById('camera-status').textContent = "Camera access timeout. Please check your permissions.";
       document.getElementById('scanner-error').style.display = "block";
       document.getElementById('scanner-error').innerHTML = "Camera access timeout. Please ensure camera permissions are granted and try again.";
+      console.error("Camera start timeout reached");
     }
   }, 10000);
 
-  // Handle successful start
   startPromise.then(() => {
     clearTimeout(startTimeout);
     document.getElementById('camera-status').textContent = "Camera active! Point at a QR code.";
+    console.log("Camera started successfully");
   }).catch((err) => {
     clearTimeout(startTimeout);
     console.error("Error starting scanner:", err);
@@ -112,6 +130,7 @@ function initializeScanner() {
 
 // Process a scanned QR code
 function processQrCode(qrValue) {
+  console.log("QR Code scanned:", qrValue);
   if (window.qrCodes[qrValue]) {
     const qrCode = window.qrCodes[qrValue];
 
@@ -125,7 +144,10 @@ function processQrCode(qrValue) {
     foundCodes++;
 
     saveProgress();
-    document.getElementById(`point-${qrCode.id}`).classList.add('active');
+    const pointElem = document.getElementById(`point-${qrCode.id}`);
+    if (pointElem) {
+      pointElem.classList.add('active');
+    }
     updateProgressBar();
 
     document.getElementById('found-which-qr').textContent = `You found QR Code #${qrCode.id}!`;
@@ -228,7 +250,7 @@ function saveProgress() {
     qrCodes: window.qrCodes
   };
   localStorage.setItem('treasureHuntProgress', JSON.stringify(progress));
-  console.log('Progress saved');
+  console.log('Progress saved:', progress);
 }
 
 // Load saved progress
@@ -245,7 +267,10 @@ function loadSavedProgress() {
     for (const key in window.qrCodes) {
       if (window.qrCodes[key].found) {
         foundCodes++;
-        document.getElementById(`point-${window.qrCodes[key].id}`).classList.add('active');
+        const pointElem = document.getElementById(`point-${window.qrCodes[key].id}`);
+        if (pointElem) {
+          pointElem.classList.add('active');
+        }
       }
     }
     updateProgressBar();
@@ -263,8 +288,9 @@ function loadSavedProgress() {
   }
 }
 
-// Reset all progress
+// Reset all progress with added logging
 function resetProgress() {
+  console.log("Reset button clicked");
   if (confirm("Are you sure you want to reset all progress? This cannot be undone.")) {
     for (const key in window.qrCodes) {
       window.qrCodes[key].found = false;
@@ -274,20 +300,26 @@ function resetProgress() {
     updateProgressBar();
     
     for (let i = 1; i <= 5; i++) {
-      document.getElementById(`point-${i}`).classList.remove('active');
+      const pointElem = document.getElementById(`point-${i}`);
+      if (pointElem) {
+        pointElem.classList.remove('active');
+      }
     }
     
     localStorage.removeItem('treasureHuntProgress');
     
     if (html5QrCode && html5QrCode.isScanning) {
       html5QrCode.stop().catch(err => {
-        console.error("Error stopping scanner:", err);
+        console.error("Error stopping scanner during reset:", err);
       });
     }
     
     showScreen('welcome-screen');
     
     alert("Progress has been reset. You can start the hunt again.");
+    console.log("Reset complete, welcome screen displayed");
+  } else {
+    console.log("Reset cancelled");
   }
 }
 
