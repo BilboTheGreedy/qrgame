@@ -263,11 +263,22 @@ function processQrCode(qrValue) {
         showScreen('clue-screen');
 
         if (foundCodes === 5) {
+            // First show the clue screen
             setTimeout(() => {
+                // Then show the treasure screen with enhanced celebrations
                 document.getElementById('treasure-location').textContent = window.treasureLocation;
                 showScreen('treasure-screen');
-                createConfetti();
-            }, 5000);
+                
+                // Use enhanced celebration if available, otherwise fall back to standard
+                if (typeof createEnhancedConfetti === 'function') {
+                    createEnhancedConfetti();
+                    enhanceTreasureScreen();
+                } else {
+                    createConfetti();
+                }
+                
+                console.log("Treasure found! Showing celebration screen");
+            }, 3000); // Show the treasure screen after 3 seconds
         }
     } else {
         alert("This doesn't seem to be one of the treasure hunt QR codes. Keep looking!");
