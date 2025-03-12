@@ -1,156 +1,11 @@
-.confetti {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: var(--primary);
-    border-radius: 0;
-    animation: fall 5s linear infinite;
-    z-index: 100;
-    pointer-events: none;
-    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.3));
-}
-
-@keyframes fall {
-    0% {
-        transform: translateY(-100px) rotate(0deg);
-        opacity: 1;
-    }
-    50% {
-        transform: translateY(50vh) rotate(180deg);
-        opacity: 0.8;
-    }
-    100% {
-        transform: translateY(100vh) rotate(360deg);
-        opacity: 0;
-    }
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 0 30px rgba(33, 150, 243, 0.2); }
-    50% { transform: scale(1.05); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), 0 0 50px rgba(33, 150, 243, 0.4); }
-    100% { transform: scale(1); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 0 30px rgba(33, 150, 243, 0.2); }
-}
-
-/* Cool animated background for header */
-.header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 10% 20%, rgba(33, 150, 243, 0.05) 0%, rgba(33, 150, 243, 0) 50%),
-                radial-gradient(circle at 80% 70%, rgba(3, 169, 244, 0.05) 0%, rgba(3, 169, 244, 0) 50%);
-    z-index: -1;
-}
-
-/* Add particle effect to the app background */
-.particle {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    pointer-events: none;
-    z-index: -1;
-}
-
-/* Fancy focus effect for input fields */
-.modal-input:focus {
-    border-color: var(--primary);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
-    transition: all 0.3s ease;
-}
-
-/* Cool hover effect for buttons */
-.btn-secondary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(108, 117, 125, 0.3);
-}
-
-/* More engaging scanner animation */
-.scanner-line {
-    position: absolute;
-    top: 0;
-    left: 10%;
-    right: 10%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(3, 169, 244, 0.8), transparent);
-    z-index: 20;
-    box-shadow: 0 0 8px rgba(33, 150, 243, 0.8);
-    opacity: 0.8;
-    animation: scan 2s linear infinite;
-}
-
-@keyframes scan {
-    0% { top: 0; opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { top: 100%; opacity: 0; }
-}
-
-/* Custom scrollbar for content area */
-.content::-webkit-scrollbar {
-    width: 6px;
-}
-
-.content::-webkit-scrollbar-track {
-    background: rgba(240, 240, 240, 0.5);
-    border-radius: 10px;
-}
-
-.content::-webkit-scrollbar-thumb {
-    background: rgba(33, 150, 243, 0.3);
-    border-radius: 10px;
-}
-
-.content::-webkit-scrollbar-thumb:hover {
-    background: rgba(33, 150, 243, 0.5);
-}
-
-/* Modal improvements */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    animation: fadeIn 0.3s ease;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    transform: translateY(20px);
-    animation: slideUp 0.4s ease forwards;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QR Code Treasure Hunt</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="styles.css">
 <style>
 :root {
     --primary: #2196F3;
@@ -711,6 +566,155 @@ h1 {
     display: flex;
     justify-content: space-between;
 }
+
+/* Additional animations and effects from styles.css */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--primary);
+    border-radius: 0;
+    animation: fall 5s linear infinite;
+    z-index: 100;
+    pointer-events: none;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.3));
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(50vh) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 0 30px rgba(33, 150, 243, 0.2); }
+    50% { transform: scale(1.05); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1), 0 0 50px rgba(33, 150, 243, 0.4); }
+    100% { transform: scale(1); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 0 30px rgba(33, 150, 243, 0.2); }
+}
+
+/* Cool animated background for header */
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(33, 150, 243, 0.05) 0%, rgba(33, 150, 243, 0) 50%),
+                radial-gradient(circle at 80% 70%, rgba(3, 169, 244, 0.05) 0%, rgba(3, 169, 244, 0) 50%);
+    z-index: -1;
+}
+
+/* Add particle effect to the app background */
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Fancy focus effect for input fields */
+.modal-input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Cool hover effect for buttons */
+.btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(108, 117, 125, 0.3);
+}
+
+/* More engaging scanner animation */
+.scanner-line {
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(3, 169, 244, 0.8), transparent);
+    z-index: 20;
+    box-shadow: 0 0 8px rgba(33, 150, 243, 0.8);
+    opacity: 0.8;
+    animation: scan 2s linear infinite;
+}
+
+@keyframes scan {
+    0% { top: 0; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+/* Custom scrollbar for content area */
+.content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: rgba(240, 240, 240, 0.5);
+    border-radius: 10px;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: rgba(33, 150, 243, 0.3);
+    border-radius: 10px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+    background: rgba(33, 150, 243, 0.5);
+}
+
+/* Modal improvements */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px);
+    animation: slideUp 0.4s ease forwards;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
 </style>
 </head>
 <body>
@@ -741,95 +745,8 @@ h1 {
             <div class="scanner-line"></div>
         </div>
         
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <div class="content">
-            <!-- Welcome Screen -->
-            <div id="welcome-screen" class="screen active">
-                <div class="puzzle-title animate__animated animate__fadeIn">Welcome to Your Treasure Hunt!</div>
-                <div class="puzzle-description animate__animated animate__fadeIn animate__delay-1s">
-                    <p>I've hidden 5 special QR codes for you to find. Each one contains a clue about our relationship.</p>
-                    <p>Find and scan all 5 codes to discover where your special treasure is waiting!</p>
-                    <p>Your first clue: <em>"Look where we keep our memories from the past year..."</em></p>
-                </div>
-                <button id="begin-hunt-btn" class="btn btn-center animate__animated animate__fadeIn animate__delay-2s">Begin the Hunt</button>
-            </div>
-            
-            <!-- Scanner Screen -->
-            <div id="scanner-screen" class="screen">
-                <div class="puzzle-title">QR Code Scanner</div>
-                <div class="camera-container">
-                    <div id="reader"></div>
-                    <div class="camera-status" id="camera-status">Starting camera...</div>
-                    <div class="scanner-line"></div>
-                </div>
-                
-                <div id="scanner-error"></div>
-                
-                <button class="btn btn-secondary btn-small btn-center" onclick="showManualEntry()">Enter Code Manually</button>
-                
-                <div class="progress-container">
-                    <div class="progress-track">
-                        <div class="progress-fill" id="progress-fill"></div>
-                        <div class="progress-point" id="point-1">
-                            <div class="progress-label">1</div>
-                        </div>
-                        <div class="progress-point" id="point-2">
-                            <div class="progress-label">2</div>
-                        </div>
-                        <div class="progress-point" id="point-3">
-                            <div class="progress-label">3</div>
-                        </div>
-                        <div class="progress-point" id="point-4">
-                            <div class="progress-label">4</div>
-                        </div>
-                        <div class="progress-point" id="point-5">
-                            <div class="progress-label">5</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Clue Display Screen -->
-            <div id="clue-screen" class="screen">
-                <div id="found-which-qr" class="code-found-message animate__animated animate__bounceIn">You found QR Code #1!</div>
-                
-                <div class="clue-container animate__animated animate__fadeIn">
-                    <div class="puzzle-title">Your Clue:</div>
-                    <div id="clue-content"></div>
-                    <div class="next-hint" id="next-hint"></div>
-                </div>
-                
-                <button class="btn btn-center animate__animated animate__fadeIn animate__delay-1s" onclick="returnToScanner()">Continue Hunting</button>
-            </div>
-            
-            <!-- Final Treasure Screen -->
-            <div id="treasure-screen" class="screen">
-                <div class="treasure-complete animate__animated animate__fadeIn">
-                    <div class="treasure-icon animate__animated animate__heartBeat animate__infinite">❤️</div>
-                    <div class="treasure-title animate__animated animate__fadeIn animate__delay-1s">Congratulations!</div>
-                    <div class="treasure-message animate__animated animate__fadeIn animate__delay-1s">
-                        You've found all the QR codes and completed the treasure hunt!
-                    </div>
-                    <div class="treasure-location animate__animated animate__fadeIn animate__delay-2s" id="treasure-location"></div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <button class="btn-secondary btn-small btn-reset" onclick="resetProgress()">Reset Progress</button>
-=======
         <div id="scanner-error"></div>
         
-=======
-        <div id="scanner-error"></div>
-        
->>>>>>> 9300e49 (x-tra cool)
-=======
-        <div id="scanner-error"></div>
-        
->>>>>>> 9300e49 (x-tra cool)
         <button class="btn btn-secondary btn-small btn-center" onclick="showManualEntry()">Enter Code Manually</button>
         
         <div class="progress-container">
@@ -851,13 +768,6 @@ h1 {
                     <div class="progress-label">5</div>
                 </div>
             </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of e121fcb (yeeey)
-=======
->>>>>>> 9300e49 (x-tra cool)
-=======
->>>>>>> 9300e49 (x-tra cool)
         </div>
     </div>
     
@@ -893,476 +803,13 @@ h1 {
     </div>
 </div>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    <!-- Dynamic script loading for libraries -->
-    <script>
-        // Dynamically load HTML5-QRCode library
-        function loadLibrary(src, id) {
-            return new Promise((resolve, reject) => {
-                if (document.getElementById(id)) {
-                    resolve();
-                    return;
-                }
-
-                const script = document.createElement('script');
-                script.src = src;
-                script.id = id;
-                script.async = true;
-                script.onload = () => resolve();
-                script.onerror = () => reject(new Error(`Failed to load ${src}`));
-                document.head.appendChild(script);
-            });
-        }
-
-        // Load libraries sequentially
-        Promise.all([
-            loadLibrary('https://unpkg.com/html5-qrcode@2.3.8/dist/html5-qrcode.min.js', 'html5-qrcode-lib'),
-            loadLibrary('config.js', 'config-script'),
-            loadLibrary('script.js', 'main-script')
-        ]).catch(error => {
-            console.error('Library loading failed:', error);
-            document.getElementById('scanner-error').style.display = "block";
-            document.getElementById('scanner-error').innerHTML = `
-                <strong>Library Load Error:</strong> ${error.message}<br>
-                Please refresh the page or check your internet connection.
-            `;
-        });
-    </script>
-=======
-=======
->>>>>>> 9300e49 (x-tra cool)
-=======
->>>>>>> 9300e49 (x-tra cool)
 <div class="footer">
     <button class="btn-secondary btn-small" onclick="resetProgress()">Reset Progress</button>
 </div>
 </div>
 
 <script src="https://unpkg.com/html5-qrcode"></script>
-<script>
-// QR Code data and clues
-const qrCodes = {
-    "QR_CODE_1": {
-        id: 1,
-        found: false,
-        clue: "Our first date was so special to me. I remember how nervous I was when we met at that café. You ordered your favorite drink and we talked for hours.",
-        nextHint: "For your next clue, look where we keep something sweet..."
-    },
-    "QR_CODE_2": {
-        id: 2,
-        found: false,
-        clue: "Remember our first trip together? We took so many pictures and laughed so much. That sunset by the beach was magical.",
-        nextHint: "Your next clue is hiding where we keep our favorite books..."
-    },
-    "QR_CODE_3": {
-        id: 3,
-        found: false,
-        clue: "That time we cooked together and almost burned the kitchen! But the meal turned out perfect in the end, just like us.",
-        nextHint: "Look for the next clue where music plays..."
-    },
-    "QR_CODE_4": {
-        id: 4,
-        found: false,
-        clue: "Our song always makes me think of you. Whenever I hear it, I smile and remember all our special moments together.",
-        nextHint: "For your final clue, check where I left you a note last Valentine's Day..."
-    },
-    "QR_CODE_5": {
-        id: 5,
-        found: false,
-        clue: "You mean everything to me. Every day with you is a blessing, and I can't wait to create more memories together.",
-        nextHint: "You've found all the clues! Now for your treasure..."
-    }
-};
-
-// Customize this with the actual location of the gift
-const treasureLocation = "Look inside the bottom drawer of your dresser!";
-
-let html5QrCode;
-let foundCodes = 0;
-
-// Create background particles
-function createParticles() {
-    const body = document.body;
-    const particleCount = 30;
-    
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        
-        // Random size between 2px and 6px
-        const size = Math.random() * 4 + 2;
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-        
-        // Random position
-        particle.style.top = Math.random() * 100 + 'vh';
-        particle.style.left = Math.random() * 100 + 'vw';
-        
-        // Random opacity
-        particle.style.opacity = Math.random() * 0.6 + 0.1;
-        
-        // Add animation for floating effect
-        const duration = Math.random() * 60 + 30;
-        const delay = Math.random() * 10;
-        
-        particle.style.animation = `float ${duration}s ${delay}s infinite alternate`;
-        
-        body.appendChild(particle);
-    }
-}
-
-// Load saved progress on page load
-window.onload = function() {
-    loadSavedProgress();
-    createParticles();
-};
-
-// Show a specific screen and hide others
-function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(screen => {
-        screen.classList.remove('active');
-    });
-    document.getElementById(screenId).classList.add('active');
-}
-
-// Save progress to localStorage
-function saveProgress() {
-    const progress = {
-        foundCodes: foundCodes,
-        qrCodes: qrCodes
-    };
-    localStorage.setItem('treasureHuntProgress', JSON.stringify(progress));
-    console.log('Progress saved');
-}
-
-// Load progress from localStorage
-function loadSavedProgress() {
-    const savedProgress = localStorage.getItem('treasureHuntProgress');
-    if (savedProgress) {
-        const progress = JSON.parse(savedProgress);
-        
-        // Restore QR codes state
-        for (const key in progress.qrCodes) {
-            if (qrCodes[key]) {
-                qrCodes[key].found = progress.qrCodes[key].found;
-            }
-        }
-        
-        // Count found codes
-        foundCodes = 0;
-        for (const key in qrCodes) {
-            if (qrCodes[key].found) {
-                foundCodes++;
-                document.getElementById(`point-${qrCodes[key].id}`).classList.add('active');
-            }
-        }
-        
-        // Update progress bar
-        updateProgressBar();
-        
-        console.log(`Loaded saved progress. Found ${foundCodes} QR codes.`);
-        
-        // If all codes are found, show the treasure screen
-        if (foundCodes === 5) {
-            document.getElementById('treasure-location').textContent = treasureLocation;
-            showScreen('treasure-screen');
-            createConfetti();
-        }
-        // If at least one code found but not all, show the scanner
-        else if (foundCodes > 0) {
-            showScreen('scanner-screen');
-            setTimeout(() => {
-                startScanner();
-            }, 500);
-        }
-    }
-}
-
-// Update the progress bar based on found codes
-function updateProgressBar() {
-    const width = (foundCodes / 5) * 100;
-    document.getElementById('progress-fill').style.width = `${width}%`;
-}
-
-// Start the game
-function startGame() {
-    showScreen('scanner-screen');
-    startScanner();
-}
-
-// Initialize and start the QR scanner
-function startScanner() {
-    document.getElementById('camera-status').textContent = "Starting camera...";
-    document.getElementById('scanner-error').style.display = "none";
-    
-    // If a scanner is already running, stop it first
-    if (html5QrCode && html5QrCode.isScanning) {
-        html5QrCode.stop().then(() => {
-            initializeScanner();
-        }).catch(err => {
-            console.error("Error stopping scanner:", err);
-            initializeScanner();
-        });
-    } else {
-        initializeScanner();
-    }
-}
-
-// Initialize the QR scanner
-function initializeScanner() {
-    html5QrCode = new Html5Qrcode("reader");
-    
-    const qrCodeSuccessCallback = (decodedText) => {
-        // Stop the scanner once a QR code is found
-        html5QrCode.stop().then(() => {
-            console.log("Scanner stopped after successful scan");
-            processQrCode(decodedText);
-        }).catch(err => {
-            console.error("Error stopping scanner:", err);
-        });
-    };
-    
-    const config = { 
-        fps: 10, 
-        qrbox: { width: 250, height: 250 },
-        aspectRatio: 1.0
-    };
-    
-    document.getElementById('camera-status').textContent = "Accessing camera...";
-    
-    html5QrCode.start(
-        { facingMode: "environment" }, 
-        config,
-        qrCodeSuccessCallback,
-        (errorMessage) => {
-            // Just log errors, don't display during scanning
-            console.error(errorMessage);
-        }
-    ).then(() => {
-        document.getElementById('camera-status').textContent = "Camera active! Point at a QR code.";
-    }).catch((err) => {
-        console.error("Error starting scanner:", err);
-        document.getElementById('scanner-error').style.display = "block";
-        document.getElementById('scanner-error').innerHTML = 
-            "Camera access error: " + err + "<br>Try using a different browser or check camera permissions.";
-        document.getElementById('camera-status').textContent = "Camera not available.";
-    });
-}
-
-// Process a scanned QR code
-function processQrCode(qrValue) {
-    // Check if this is one of our QR codes
-    if (qrCodes[qrValue]) {
-        const qrCode = qrCodes[qrValue];
-        
-        // Check if this code has already been found
-        if (qrCode.found) {
-            alert("You've already found this QR code!");
-            startScanner(); // Restart the scanner
-            return;
-        }
-        
-        // Mark as found
-        qrCode.found = true;
-        foundCodes++;
-        
-        // Save progress
-        saveProgress();
-        
-        // Update UI
-        document.getElementById(`point-${qrCode.id}`).classList.add('active');
-        updateProgressBar();
-        
-        // Show the clue
-        document.getElementById('found-which-qr').textContent = `You found QR Code #${qrCode.id}!`;
-        document.getElementById('clue-content').textContent = qrCode.clue;
-        document.getElementById('next-hint').textContent = qrCode.nextHint;
-        
-        showScreen('clue-screen');
-        
-        // If all codes are found, show the treasure screen
-        if (foundCodes === 5) {
-            setTimeout(() => {
-                document.getElementById('treasure-location').textContent = treasureLocation;
-                showScreen('treasure-screen');
-                createConfetti();
-            }, 5000);
-        }
-    } else {
-        alert("This doesn't seem to be one of the treasure hunt QR codes. Keep looking!");
-        startScanner(); // Restart the scanner
-    }
-}
-
-// Show manual entry dialog
-function showManualEntry() {
-    // Create modal
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-    
-    // Create modal content
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content';
-    
-    // Add title
-    const title = document.createElement('h3');
-    title.className = 'modal-title';
-    title.textContent = 'Enter QR Code Manually';
-    
-    // Add description
-    const description = document.createElement('p');
-    description.textContent = 'If camera scanning isn\'t working, enter the QR code value manually:';
-    
-    // Add input
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'modal-input';
-    input.placeholder = 'Enter QR Code (e.g., QR_CODE_1)';
-    
-    // Add buttons
-    const actions = document.createElement('div');
-    actions.className = 'modal-actions';
-    
-    const cancelBtn = document.createElement('button');
-    cancelBtn.className = 'btn btn-secondary';
-    cancelBtn.textContent = 'Cancel';
-    
-    const submitBtn = document.createElement('button');
-    submitBtn.className = 'btn';
-    submitBtn.textContent = 'Submit';
-    
-    // Add event listeners
-    cancelBtn.addEventListener('click', () => {
-        document.body.removeChild(modal);
-        startScanner();
-    });
-    
-    submitBtn.addEventListener('click', () => {
-        const qrValue = input.value.trim();
-        if (qrValue) {
-            document.body.removeChild(modal);
-            processQrCode(qrValue);
-        } else {
-            alert('Please enter a valid QR code.');
-        }
-    });
-    
-    // Assemble modal
-    actions.appendChild(cancelBtn);
-    actions.appendChild(submitBtn);
-    
-    modalContent.appendChild(title);
-    modalContent.appendChild(description);
-    modalContent.appendChild(input);
-    modalContent.appendChild(actions);
-    
-    modal.appendChild(modalContent);
-    
-    // Stop scanner while modal is open
-    if (html5QrCode && html5QrCode.isScanning) {
-        html5QrCode.stop().catch(err => {
-            console.error("Error stopping scanner:", err);
-        });
-    }
-    
-    // Add to body and focus
-    document.body.appendChild(modal);
-    setTimeout(() => {
-        input.focus();
-    }, 100);
-}
-
-// Return to scanner from clue screen
-function returnToScanner() {
-    showScreen('scanner-screen');
-    startScanner();
-}
-
-// Reset all progress
-function resetProgress() {
-    if (confirm("Are you sure you want to reset all progress? This cannot be undone.")) {
-        // Reset QR codes
-        for (const key in qrCodes) {
-            qrCodes[key].found = false;
-        }
-        
-        // Reset UI
-        foundCodes = 0;
-        updateProgressBar();
-        
-        // Reset progress points
-        for (let i = 1; i <= 5; i++) {
-            document.getElementById(`point-${i}`).classList.remove('active');
-        }
-        
-        // Clear local storage
-        localStorage.removeItem('treasureHuntProgress');
-        
-        // Stop scanner if running
-        if (html5QrCode && html5QrCode.isScanning) {
-            html5QrCode.stop().catch(err => {
-                console.error("Error stopping scanner:", err);
-            });
-        }
-        
-        // Show welcome screen
-        showScreen('welcome-screen');
-        
-        alert("Progress has been reset. You can start the hunt again.");
-    }
-}
-
-// Create confetti effect
-function createConfetti() {
-    const appContainer = document.querySelector('.app-container');
-    const confettiColors = ['#ff4d8d', '#ffc8dd', '#cdb4db', '#ffafcc', '#bde0fe', '#f4acb7'];
-    const confettiShapes = ['square', 'circle'];
-    
-    for (let i = 0; i < 150; i++) {
-        setTimeout(() => {
-            const confetti = document.createElement('div');
-            confetti.classList.add('confetti');
-            
-            // Random position
-            confetti.style.left = Math.random() * 100 + '%';
-            
-            // Random color
-            confetti.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
-            
-            // Random shape
-            if (confettiShapes[Math.floor(Math.random() * confettiShapes.length)] === 'circle') {
-                confetti.style.borderRadius = '50%';
-            }
-            
-            // Random size
-            const size = Math.random() * 10 + 5;
-            confetti.style.width = size + 'px';
-            confetti.style.height = size + 'px';
-            
-            // Random animation duration
-            confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
-            
-            // Random animation delay
-            confetti.style.animationDelay = Math.random() * 5 + 's';
-            
-            appContainer.appendChild(confetti);
-            
-            // Remove after animation completes
-            setTimeout(() => {
-                appContainer.removeChild(confetti);
-            }, 8000);
-        }, i * 50);
-    }
-}
-</script>
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of e121fcb (yeeey)
-=======
->>>>>>> 9300e49 (x-tra cool)
-=======
->>>>>>> 9300e49 (x-tra cool)
+<script src="config.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
