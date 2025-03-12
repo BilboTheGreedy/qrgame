@@ -11,7 +11,7 @@
     <meta http-equiv="Permissions-Policy" content="interest-cohort=(), camera=self">
     <!-- PWA icons for iOS home screen (optional but recommended) -->
     <link rel="apple-touch-icon" href="assets/icon-192.png">
-    
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; media-src 'self'; frame-src 'self';">
     <!-- Prevent touch delays on mobile devices -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="styles/main.css">
@@ -110,14 +110,12 @@
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/html5-qrcode@2.3.8/dist/html5-qrcode.min.js"></script>
-<!-- Make sure these paths match your actual folder structure -->
-<script src="scripts/config.js"></script>
-<script src="scripts/app.js"></script>
-<script src="scripts/scanner.js"></script>
-<script src="scripts/ui-effects.js"></script>
-<script src="scripts/progress.js"></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/scanner.js"></script>
+    <script src="scripts/ui-effects.js"></script>
+    <script src="scripts/progress.js"></script>
 <script>
     console.log("Document loaded, libraries status:");
     console.log("Html5Qrcode available:", typeof Html5Qrcode !== 'undefined');

@@ -7,6 +7,38 @@
 // Global variables
 let html5QrCode;
 let foundCodes = 0;
+// Declare these as global variables (window properties)
+window.html5QrCode = null;
+window.foundCodes = 0;
+
+// Make sure key functions are exposed globally
+window.showScreen = function(screenId) {
+  // your showScreen code
+};
+
+window.startScanner = function() {
+  // your startScanner code
+};
+
+function initApp() {
+    // Initialize the app
+    console.log("Initializing app");
+    // Bind event listeners
+    document.getElementById('begin-hunt-btn').addEventListener('click', startGame);
+    document.getElementById('manual-entry-btn').addEventListener('click', showManualEntry);
+    document.getElementById('continue-btn').addEventListener('click', returnToScanner);
+    document.getElementById('reset-btn').addEventListener('click', resetProgress);
+    
+    // Load saved progress
+    loadSavedProgress();
+    
+    // Create visual effects
+    createParticles();
+  }
+  
+  // Call this when the DOM is ready
+  document.addEventListener('DOMContentLoaded', initApp);
+
 
 // Check if HTML5 QR Code library is loaded
 document.addEventListener('DOMContentLoaded', function() {
