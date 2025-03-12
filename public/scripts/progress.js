@@ -40,12 +40,26 @@ function loadSavedProgress() {
                 }
             }
         }
+        // Update global foundCodes
+        window.foundCodes = foundCodes;
+        
         updateProgressBar();
         console.log(`Loaded saved progress. Found ${foundCodes} QR codes.`);
+        
+        // Immediately show treasure screen if all 5 codes are found
         if (foundCodes === 5) {
+            console.log("All QR codes already found, showing treasure screen");
             document.getElementById('treasure-location').textContent = window.treasureLocation;
             showScreen('treasure-screen');
-            createConfetti();
+            // Check if enhanced celebration function exists
+            if (typeof createEnhancedConfetti === 'function') {
+                setTimeout(() => {
+                    createEnhancedConfetti();
+                    enhanceTreasureScreen();
+                }, 500);
+            } else if (typeof createConfetti === 'function') {
+                setTimeout(createConfetti, 500);
+            }
         } else if (foundCodes > 0) {
             showScreen('scanner-screen');
             setTimeout(() => {
@@ -64,6 +78,7 @@ function resetProgress() {
         }
         
         foundCodes = 0;
+        window.foundCodes = 0;
         updateProgressBar();
         
         for (let i = 1; i <= 5; i++) {

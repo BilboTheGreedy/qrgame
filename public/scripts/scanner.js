@@ -249,6 +249,11 @@ function processQrCode(qrValue) {
         window.foundCodes++;
         foundCodes = window.foundCodes; // Keep local var in sync
 
+        // Force a verification of our QR code count (debug)
+        if (typeof fixQRCodeCounting === 'function') {
+            fixQRCodeCounting();
+        }
+
         saveProgress();
         const pointElem = document.getElementById(`point-${qrCode.id}`);
         if (pointElem) {
@@ -260,25 +265,30 @@ function processQrCode(qrValue) {
         document.getElementById('clue-content').textContent = qrCode.clue;
         document.getElementById('next-hint').textContent = qrCode.nextHint;
 
+        // Show the clue screen
         showScreen('clue-screen');
 
+        // Check if this was the final QR code (5th one)
+        console.log(`Found QR code #${qrCode.id}, total found: ${foundCodes}`);
+        
         if (foundCodes === 5) {
-            // First show the clue screen
+            console.log("All 5 QR codes found! Setting up celebration...");
+            // Set a shorter timeout for the final celebration
             setTimeout(() => {
-                // Then show the treasure screen with enhanced celebrations
+                console.log("Showing treasure screen now");
                 document.getElementById('treasure-location').textContent = window.treasureLocation;
                 showScreen('treasure-screen');
                 
                 // Use enhanced celebration if available, otherwise fall back to standard
                 if (typeof createEnhancedConfetti === 'function') {
+                    console.log("Using enhanced celebration");
                     createEnhancedConfetti();
                     enhanceTreasureScreen();
                 } else {
+                    console.log("Using standard confetti");
                     createConfetti();
                 }
-                
-                console.log("Treasure found! Showing celebration screen");
-            }, 3000); // Show the treasure screen after 3 seconds
+            }, 2000); // Show after 2 seconds
         }
     } else {
         alert("This doesn't seem to be one of the treasure hunt QR codes. Keep looking!");
