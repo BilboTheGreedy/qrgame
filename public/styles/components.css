@@ -2,14 +2,14 @@
 .puzzle-title {
     font-weight: 700;
     color: var(--primary);
-    margin-bottom: 1rem;
-    font-size: 1.3rem;
+    margin-bottom: clamp(0.5rem, 3vmin, 1rem);
+    font-size: clamp(1.1rem, 4vmin, 1.3rem);
 }
 
 .puzzle-description {
-    font-size: 0.95rem;
+    font-size: clamp(0.85rem, 3vmin, 0.95rem);
     line-height: 1.5;
-    margin-bottom: 1.5rem;
+    margin-bottom: clamp(1rem, 4vmin, 1.5rem);
 }
 
 /* Buttons */
@@ -17,10 +17,181 @@
     background: linear-gradient(90deg, #2196F3, #03A9F4);
     color: white;
     border: none;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
+    padding: clamp(0.6rem, 3vmin, 0.8rem) clamp(1.2rem, 5vmin, 1.5rem);
+    font-size: clamp(0.9rem, 3.5vmin, 1rem);
     border-radius: 50px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+    margin: 0.5rem 0;
+    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    -webkit-appearance: none; /* Fix for iOS */
+    touch-action: manipulation; /* Prevent double tap zoom */
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #03A9F4, #00BCD4);
+    transition: all 0.4s ease-in-out;
+    z-index: -1;
+}
+
+.btn:hover, .btn:active {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(33, 150, 243, 0.5);
+}
+
+.btn:hover::before, .btn:active::before {
+    width: 100%;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+}
+
+.btn-secondary:hover, .btn-secondary:active {
+    background-color: #5a6268;
+    box-shadow: 0 6px 15px rgba(108, 117, 125, 0.4);
+}
+
+.btn-small {
+    font-size: clamp(0.8rem, 3vmin, 0.9rem);
+    padding: clamp(0.4rem, 2vmin, 0.6rem) clamp(0.8rem, 3vmin, 1rem);
+}
+
+.btn-center {
+    display: block;
+    margin: clamp(0.8rem, 3vmin, 1rem) auto;
+    width: fit-content;
+    min-width: 150px;
+}
+
+/* Camera Container */
+.camera-container {
+    width: 100%;
+    border-radius: clamp(10px, 3vmin, 16px);
+    overflow: hidden;
+    margin-bottom: clamp(1rem, 4vmin, 1.5rem);
+    position: relative;
+    background-color: #f5f5f5;
+    aspect-ratio: 1/1;
+    max-height: min(300px, 70vh);
+    border: 2px solid rgba(33, 150, 243, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+#reader {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#reader::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid rgba(33, 150, 243, 0.3);
+    border-radius: clamp(10px, 3vmin, 16px);
+    box-shadow: inset 0 0 20px rgba(33, 150, 243, 0.1);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.camera-status {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: clamp(8px, 2.5vmin, 10px);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: clamp(0.8rem, 2.8vmin, 0.9rem);
+    text-align: center;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#scanner-error {
+    background-color: #ffecef;
+    color: var(--primary);
+    padding: clamp(8px, 2.5vmin, 10px);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: clamp(0.8rem, 2.8vmin, 0.9rem);
+    display: none;
+}
+
+/* Progress Tracker */
+.progress-container {
+    margin: clamp(1rem, 4vmin, 1.5rem) 0;
+    padding: clamp(0.3rem, 1.5vmin, 0.5rem);
+    background: rgba(240, 240, 240, 0.5);
+    border-radius: clamp(10px, 3vmin, 15px);
+    position: relative;
+}
+
+.progress-track {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 0 clamp(5px, 2vmin, 10px);
+    padding: clamp(5px, 2vmin, 10px) 0;
+}
+
+.progress-track::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #e9ecef;
+    transform: translateY(-50%);
+    z-index: 1;
+    border-radius: 4px;
+}
+
+.progress-fill {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #2196F3, #03A9F4, #00BCD4);
+    transform: translateY(-50%);
+    z-index: 2;
+    transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(33, 150, 243, 0.5);
+}
+
+.progress-point {
+    width: clamp(20px, 6vmin, 28px);
+    height: clamp(20px, 6vmin, 28px);
+    border-radius: 50%;
+    background-color: #e9ecef;
+    border: 3px solid white;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: clamp(10px, 3vmin, 12px);
     transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     position: relative;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -51,10 +222,10 @@
 
 .progress-label {
     position: absolute;
-    top: 35px;
+    top: clamp(25px, 7vmin, 35px);
     left: 50%;
     transform: translateX(-50%);
-    font-size: 0.8rem;
+    font-size: clamp(0.7rem, 2.4vmin, 0.8rem);
     white-space: nowrap;
     color: var(--dark);
     opacity: 0.7;
@@ -64,9 +235,9 @@
 /* Clue Container */
 .clue-container {
     background-color: #f8f9fa;
-    border-radius: 16px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
+    border-radius: clamp(10px, 3vmin, 16px);
+    padding: clamp(1rem, 4vmin, 1.5rem);
+    margin-bottom: clamp(1rem, 4vmin, 1.5rem);
     border-left: 4px solid var(--primary);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     transform: perspective(800px) rotateY(0deg);
@@ -81,9 +252,9 @@
 .code-found-message {
     background: linear-gradient(135deg, #4CAF50, #8BC34A);
     color: white;
-    border-radius: 12px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
+    border-radius: clamp(8px, 2.5vmin, 12px);
+    padding: clamp(0.8rem, 3vmin, 1rem);
+    margin-bottom: clamp(1rem, 4vmin, 1.5rem);
     text-align: center;
     font-weight: 600;
     box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
@@ -95,10 +266,10 @@
 }
 
 .next-hint {
-    margin-top: 1.5rem;
-    padding: 1.2rem;
+    margin-top: clamp(1rem, 4vmin, 1.5rem);
+    padding: clamp(1rem, 3.8vmin, 1.2rem);
     background: linear-gradient(to right, rgba(3, 169, 244, 0.1), rgba(0, 188, 212, 0.1));
-    border-radius: 12px;
+    border-radius: clamp(8px, 2.5vmin, 12px);
     font-style: italic;
     border-left: 3px solid var(--accent);
     position: relative;
@@ -108,13 +279,13 @@
 .next-hint::before {
     content: '💡';
     position: absolute;
-    top: 10px;
-    left: 10px;
-    font-size: 1.2rem;
+    top: clamp(8px, 2.5vmin, 10px);
+    left: clamp(8px, 2.5vmin, 10px);
+    font-size: clamp(1rem, 3.5vmin, 1.2rem);
 }
 
 .next-hint {
-    padding-left: 2.5rem;
+    padding-left: clamp(2rem, 7vmin, 2.5rem);
 }
 
 /* Treasure Complete Screen */
@@ -124,32 +295,32 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 1rem;
+    padding: clamp(0.8rem, 3vmin, 1rem);
     background: radial-gradient(circle at center, rgba(33, 150, 243, 0.05) 0%, rgba(3, 169, 244, 0.1) 100%);
 }
 
 .treasure-icon {
-    font-size: 5rem;
-    margin-bottom: 1rem;
+    font-size: clamp(3rem, 12vmin, 5rem);
+    margin-bottom: clamp(0.8rem, 3vmin, 1rem);
     color: #E91E63;
     filter: drop-shadow(0 0 10px rgba(233, 30, 99, 0.5));
 }
 
 .treasure-title {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 6vmin, 2rem);
     background: linear-gradient(to right, #2196F3, #03A9F4);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    margin-bottom: 1.5rem;
+    margin-bottom: clamp(1rem, 4vmin, 1.5rem);
     font-weight: 700;
     text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     letter-spacing: 0.5px;
 }
 
 .treasure-message {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
+    font-size: clamp(0.9rem, 3.5vmin, 1.1rem);
+    margin-bottom: clamp(1rem, 4vmin, 1.5rem);
     line-height: 1.5;
     color: var(--dark);
     max-width: 90%;
@@ -160,12 +331,12 @@
 .treasure-location {
     background: rgba(33, 150, 243, 0.1);
     border: 2px dashed var(--primary);
-    padding: 1.5rem;
-    border-radius: 16px;
-    font-size: 1.3rem;
+    padding: clamp(1rem, 4vmin, 1.5rem);
+    border-radius: clamp(10px, 3vmin, 16px);
+    font-size: clamp(1.1rem, 4vmin, 1.3rem);
     font-weight: 600;
     color: var(--primary);
-    margin-bottom: 1.5rem;
+    margin-bottom: clamp(1rem, 4vmin, 1.5rem);
     position: relative;
     animation: pulse 2s infinite;
     max-width: 85%;
@@ -193,25 +364,28 @@
 
 .modal-content {
     background-color: white;
-    padding: 1.5rem;
-    border-radius: 16px;
+    padding: clamp(1.2rem, 4.5vmin, 1.5rem);
+    border-radius: clamp(10px, 3vmin, 16px);
     width: 90%;
     max-width: 400px;
+    margin: 0 20px;
 }
 
 .modal-title {
     color: var(--primary);
-    margin-bottom: 1rem;
+    margin-bottom: clamp(0.8rem, 3vmin, 1rem);
     font-weight: 700;
+    font-size: clamp(1rem, 4vmin, 1.2rem);
 }
 
 .modal-input {
     width: 100%;
-    padding: 0.8rem;
+    padding: clamp(0.6rem, 2.5vmin, 0.8rem);
     border: 2px solid #ddd;
     border-radius: 8px;
-    font-size: 1rem;
-    margin-bottom: 1rem;
+    font-size: clamp(0.9rem, 3.5vmin, 1rem);
+    margin-bottom: clamp(0.8rem, 3vmin, 1rem);
+    -webkit-appearance: none; /* Fix for iOS */
 }
 
 .modal-input:focus {
@@ -222,171 +396,22 @@
 .modal-actions {
     display: flex;
     justify-content: space-between;
-}: all 0.3s ease;
-    font-weight: 600;
-    display: inline-block;
-    text-align: center;
-    margin: 0.5rem 0;
-    box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
+    flex-wrap: wrap; /* Allow buttons to wrap on very small screens */
+    gap: 10px; /* Space between buttons if they wrap */
 }
 
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0%;
-    height: 100%;
-    background: linear-gradient(90deg, #03A9F4, #00BCD4);
-    transition: all 0.4s ease-in-out;
-    z-index: -1;
+.modal-actions button {
+    min-width: max(80px, 30%); /* Ensure buttons have reasonable tap targets */
 }
 
-.btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(33, 150, 243, 0.5);
+/* Make sure buttons are easy to tap on mobile devices */
+@media (max-width: 320px) {
+    .modal-actions {
+        flex-direction: column;
+    }
+    
+    .modal-actions button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
 }
-
-.btn:hover::before {
-    width: 100%;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
-}
-
-.btn-secondary:hover {
-    background-color: #5a6268;
-    box-shadow: 0 6px 15px rgba(108, 117, 125, 0.4);
-}
-
-.btn-small {
-    font-size: 0.9rem;
-    padding: 0.6rem 1rem;
-}
-
-.btn-center {
-    display: block;
-    margin: 1rem auto;
-}
-
-/* Camera Container */
-.camera-container {
-    width: 100%;
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-    position: relative;
-    background-color: #f5f5f5;
-    aspect-ratio: 1/1;
-    max-height: 300px;
-    border: 2px solid rgba(33, 150, 243, 0.2);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-#reader {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-#reader::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border: 2px solid rgba(33, 150, 243, 0.3);
-    border-radius: 16px;
-    box-shadow: inset 0 0 20px rgba(33, 150, 243, 0.1);
-    pointer-events: none;
-    z-index: 10;
-}
-
-.camera-status {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 10px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    font-size: 0.9rem;
-    text-align: center;
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-#scanner-error {
-    background-color: #ffecef;
-    color: var(--primary);
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-    display: none;
-}
-
-/* Progress Tracker */
-.progress-container {
-    margin: 1.5rem 0;
-    padding: 0.5rem;
-    background: rgba(240, 240, 240, 0.5);
-    border-radius: 15px;
-    position: relative;
-}
-
-.progress-track {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    margin: 0 10px;
-    padding: 10px 0;
-}
-
-.progress-track::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background-color: #e9ecef;
-    transform: translateY(-50%);
-    z-index: 1;
-    border-radius: 4px;
-}
-
-.progress-fill {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #2196F3, #03A9F4, #00BCD4);
-    transform: translateY(-50%);
-    z-index: 2;
-    transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-    border-radius: 4px;
-    box-shadow: 0 0 8px rgba(33, 150, 243, 0.5);
-}
-
-.progress-point {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background-color: #e9ecef;
-    border: 3px solid white;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 12px;
-    transition
