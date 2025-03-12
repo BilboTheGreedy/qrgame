@@ -1,0 +1,83 @@
+/* Visual Effects */
+
+/* Scanner Animation */
+.scanner-line {
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(3, 169, 244, 0.8), transparent);
+    z-index: 20;
+    box-shadow: 0 0 8px rgba(33, 150, 243, 0.8);
+    opacity: 0.8;
+    animation: scan 2s linear infinite;
+}
+
+/* Custom Scrollbar */
+.content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+    background: rgba(240, 240, 240, 0.5);
+    border-radius: 10px;
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: rgba(33, 150, 243, 0.3);
+    border-radius: 10px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+    background: rgba(33, 150, 243, 0.5);
+}
+
+/* Modal Effects */
+.modal {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px);
+    animation: slideUp 0.4s ease forwards;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* Button Hover Effects */
+.btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(108, 117, 125, 0.3);
+}
+
+/* Header Gradient Effect */
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(33, 150, 243, 0.05) 0%, rgba(33, 150, 243, 0) 50%),
+                radial-gradient(circle at 80% 70%, rgba(3, 169, 244, 0.05) 0%, rgba(3, 169, 244, 0) 50%);
+    z-index: -1;
+}
+
+/* Particle Background Effect */
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+    z-index: -1;
+}

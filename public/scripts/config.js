@@ -37,8 +37,8 @@ class TreasureHuntConfig {
             "QR_CODE_5": {
                 id: 5,
                 found: false,
-                clue: "Then we went on an incredible journey across different places! And we took SO MANY PICTURES! Paris baby",
-                nextHint: "The glovebox"
+                clue: "Then we went on an incredible journey across different places! And we took SO MANY PICTURES! Paris baby!",
+                nextHint: "Go to the passenger seat, open the glovebox."
             }
         };
 
